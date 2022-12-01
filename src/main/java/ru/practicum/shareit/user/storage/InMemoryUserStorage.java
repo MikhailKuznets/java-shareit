@@ -7,8 +7,8 @@ import ru.practicum.shareit.user.User;
 
 import java.util.*;
 
-@Slf4j
 @Repository
+@Slf4j
 public class InMemoryUserStorage implements UserStorage {
     private long currentUserId = 1L;
     private final Map<Long, User> users = new HashMap<>();

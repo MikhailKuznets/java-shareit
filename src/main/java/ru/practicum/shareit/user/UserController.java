@@ -14,10 +14,10 @@ import java.util.Collection;
 /**
  * TODO Sprint add-controllers.
  */
-@Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/users")
+@Slf4j
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
@@ -41,7 +41,8 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@RequestBody User user, @PathVariable @Positive Long userId) {
+    public UserDto updateUser(@RequestBody User user,
+                              @PathVariable @Positive Long userId) {
         log.info("Получен запрос Patch /users/{}. Обновить данные пользователя {}.", userId, user);
         return userService.updateUser(userId, user);
     }

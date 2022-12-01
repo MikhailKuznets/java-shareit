@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.model;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
@@ -13,8 +15,9 @@ import javax.validation.constraints.Size;
  */
 
 @Data
+@Builder
 public class Item {
-    private final Long id;
+    private Long id;
 
     @NotBlank(message = "Необходимо указать название предмета.")
     @Size(min = 3, max = 100)
