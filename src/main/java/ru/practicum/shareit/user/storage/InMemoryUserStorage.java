@@ -17,7 +17,11 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.values().stream().map(User::getEmail).anyMatch(email::equals)) {
             throw new EmailAlreadyExistException("Пользователь с данным Email уже существует");
         }
+    }
 
+    @Override
+    public Boolean isContainsUserId(Long userId) {
+        return users.containsKey(userId);
     }
 
     @Override

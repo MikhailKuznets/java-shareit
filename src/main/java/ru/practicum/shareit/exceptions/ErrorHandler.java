@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ErrorHandler {
 
     @ExceptionHandler(EmailAlreadyExistException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "ПОЧЕМУ НЕ ОТОБРАЖАЕТСЯ?")
+    @ResponseStatus(value = HttpStatus.CONFLICT)
     public ErrorResponse handleEmailAlreadyExistException(final EmailAlreadyExistException e) {
         log.error("КОД 409: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
@@ -21,7 +21,7 @@ public class ErrorHandler {
 
 
     @ExceptionHandler(InvalidIdException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "ПОЧЕМУ НЕ ОТОБРАЖАЕТСЯ?")
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorResponse handleInvalidIdException(final InvalidIdException e) {
         log.error("КОД 404 - неверный id: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
@@ -29,16 +29,16 @@ public class ErrorHandler {
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "ПОЧЕМУ НЕ ОТОБРАЖАЕТСЯ?")
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidateParameterException(final MethodArgumentNotValidException e) {
         log.error("КОД 404 - Ошибка валидации данных: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
 
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "ПОЧЕМУ НЕ ОТОБРАЖАЕТСЯ?")
-    public ErrorResponse handleThrowable(final Throwable e) {
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleThrowable(final Exception e) {
         log.error("КОД 500 - Непредвиденная ошибка: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }

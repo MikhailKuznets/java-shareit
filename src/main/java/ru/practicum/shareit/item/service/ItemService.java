@@ -9,11 +9,10 @@ import java.util.Optional;
 public interface ItemService {
     Collection<ItemDto> findAllItems();
 
-    Optional<ItemDto> findItemById(Long ItemId);
+    Optional<ItemDto> findItemById(Long itemId);
 
-    ItemDto createItem(Item item);
+    ItemDto createItem(Item item, Long userId);
 
-    ItemDto updateItem(Long ItemId, Item item);
+    ItemDto updateItem(Long userId, Item item, Long itemId);
 
-    void deleteItemById(Long ItemId);
 }

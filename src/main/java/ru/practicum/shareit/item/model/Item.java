@@ -2,10 +2,10 @@ package ru.practicum.shareit.item.model;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @Builder
+@Valid
 public class Item {
     private Long id;
 
@@ -23,14 +24,14 @@ public class Item {
     @Size(min = 3, max = 100)
     private String name;
 
-    @Size(max = 500)
+    @NotBlank(message = "Необходимо указать описание предмета.")
+    @Size(min = 3, max = 500)
     private String description;
 
     @NotNull
     private Boolean available;
 
-    @NotNull
-    private final User owner;
+    private User owner;
 
-    private final ItemRequest request;
+    private ItemRequest request;
 }

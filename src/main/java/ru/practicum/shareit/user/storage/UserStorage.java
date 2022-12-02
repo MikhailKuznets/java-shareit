@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface UserStorage {
 
+    Boolean isContainsUserId(Long userId);
+
     Collection<User> getAllUsers();
 
     Optional<User> findUserById(Long userId);

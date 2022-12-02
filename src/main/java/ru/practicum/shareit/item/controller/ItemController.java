@@ -19,22 +19,6 @@ import java.util.Collection;
 public class ItemController {
     private final ItemService itemService;
 
-    @PostMapping
-    public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                              @RequestBody @Valid Item item) {
-        log.info("Получен запрос Post /items. От пользователя id = {}, добавить вещь: {}", userId, item);
-        return itemService.createItem(item);
-    }
-
-    @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                              @PathVariable @Positive Long itemId,
-                              @RequestBody @Valid Item item) {
-        log.info("Получен запрос Patch /items/{}. От пользователя id = {}, обновить данные вещи {}.",
-                userId, userId, item);
-        return itemService.updateItem(userId, item);
-    }
-
     @GetMapping
     public Collection<ItemDto> getAllItems(@RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
         return itemService.findAllItems();
@@ -46,8 +30,24 @@ public class ItemController {
                                @RequestBody @Valid Item item) {
         log.info("Получен запрос Patch /items/{}. От пользователя id = {}, обновить данные вещи {}.",
                 userId, userId, item);
-        return itemService.updateItem(userId, item);
+//        return itemService.updateItem(userId, item);
+        return null;
     }
 
+    @PostMapping
+    public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
+                              @RequestBody @Valid Item item) {
+        log.info("Получен запрос Post /items. От пользователя id = {}, добавить вещь: {}", userId, item);
+        return itemService.createItem(item, userId);
+    }
+
+    @PatchMapping("/{itemId}")
+    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
+                              @PathVariable @Positive Long itemId,
+                              @RequestBody Item item) {
+        log.info("Получен запрос Patch /items/{}. От пользователя id = {}, обновить данные вещи {}.",
+                itemId, userId, item);
+        return itemService.updateItem(userId, item, itemId);
+    }
 
 }
