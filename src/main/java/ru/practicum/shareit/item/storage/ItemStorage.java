@@ -12,7 +12,7 @@ public interface ItemStorage {
 
     Collection<Item> getUserItems(Long userId);
 
-    Item createItem(Item item, User Owner);
+    Item createItem(Item item, User owner);
 
     Item updateItem(Long userId, Item item, Long itemId);
 

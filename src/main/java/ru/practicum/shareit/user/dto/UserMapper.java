@@ -9,8 +9,8 @@ public class UserMapper {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
-                .email(user.getEmail()).
-                build();
+                .email(user.getEmail())
+                .build();
     }
 
     public static Optional<UserDto> toOptionalUserDto(Optional<User> user) {
