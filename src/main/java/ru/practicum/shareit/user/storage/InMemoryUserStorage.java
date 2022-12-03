@@ -30,7 +30,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> findUserById(Long userId) {
+    public Optional<User> getUserById(Long userId) {
         if (users.containsKey(userId)) {
             return Optional.of(users.get(userId));
         } else {

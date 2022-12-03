@@ -7,12 +7,13 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface ItemService {
-    Collection<ItemDto> findAllItems();
+    Collection<ItemDto> getUserItems(Long userId);
 
-    Optional<ItemDto> findItemById(Long itemId);
+    Optional<ItemDto> getItemById(Long itemId);
 
     ItemDto createItem(Item item, Long userId);
 
     ItemDto updateItem(Long userId, Item item, Long itemId);
 
+    Collection<ItemDto> searchItem(String text);
 }

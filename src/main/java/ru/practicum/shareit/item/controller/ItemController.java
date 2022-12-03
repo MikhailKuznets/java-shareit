@@ -4,6 +4,7 @@ package ru.practicum.shareit.item.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exceptions.InvalidIdException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -20,18 +21,25 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public Collection<ItemDto> getAllItems(@RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
-        return itemService.findAllItems();
+    public Collection<ItemDto> getUserItems(@RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
+        return itemService.getUserItems(userId);
     }
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                               @PathVariable @Positive Long itemId,
-                               @RequestBody @Valid Item item) {
-        log.info("Получен запрос Patch /items/{}. От пользователя id = {}, обновить данные вещи {}.",
-                userId, userId, item);
-//        return itemService.updateItem(userId, item);
-        return null;
+                               @PathVariable @Positive Long itemId) {
+        log.info("Получен запрос GET /items/{}. От пользователя id = {}.",
+                itemId, userId);
+        return itemService.getItemById(itemId).orElseThrow(
+                () -> new InvalidIdException("К сожалению, вещи с id " + itemId + " нет."));
+    }
+
+    @GetMapping("/search")
+    public Collection<ItemDto> searchItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
+                               @RequestParam("text") String text) {
+        log.info("Получен запрос GET /items/search?text={}. От пользователя id = {}.",
+                text, userId);
+        return itemService.searchItem(text);
     }
 
     @PostMapping

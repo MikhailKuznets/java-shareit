@@ -6,14 +6,30 @@ import ru.practicum.shareit.exceptions.InvalidIdException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
 public class InMemoryItemStorage implements ItemStorage {
     private long currentItemId = 1L;
     private final Map<Long, Item> items = new HashMap<>();
+
+    @Override
+    public Optional<Item> getItemById(Long itemId) {
+        if (items.containsKey(itemId)) {
+            return Optional.of(items.get(itemId));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Collection<Item> getUserItems(Long userId) {
+        return items.values().stream()
+                .filter(x -> x.getOwner().getId().equals(userId))
+                .collect(Collectors.toList());
+    }
 
     @Override
     public Item createItem(Item item, User owner) {
@@ -51,4 +67,19 @@ public class InMemoryItemStorage implements ItemStorage {
         items.put(itemId, selectedItem);
         return selectedItem;
     }
+
+    @Override
+    public Collection<Item> searchItem(String text) {
+        if (text.isBlank()) {
+            log.warn("Задан пустой поисковый запрос.");
+            return Collections.emptyList();
+        }
+        String lowerText = text.toLowerCase();
+        return items.values().stream()
+                .filter(Item::getAvailable)
+                .filter(item -> item.getName().toLowerCase().contains(lowerText)
+                        || item.getDescription().toLowerCase().contains(lowerText))
+                .collect(Collectors.toList());
+    }
+
 }
