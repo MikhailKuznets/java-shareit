@@ -2,6 +2,8 @@ package ru.practicum.shareit.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -22,28 +24,27 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public Collection<UserDto> findAllUsers() {
+    public ResponseEntity<Collection<UserDto>> findAllUsers() {
         log.info("Получен запрос Get /users. Получить всех пользователей.");
-        return userService.findAllUsers();
+        return new ResponseEntity<>(userService.findAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
-    public UserDto findUserById(@PathVariable @Positive Long userId) {
+    public ResponseEntity<UserDto> findUserById(@PathVariable @Positive Long userId) {
         log.info("Получен запрос Get /users/{}. Найти пользователя по userId {}.", userId, userId);
-        return userService.findUserById(userId);
+        return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
 
     @PostMapping
-    public UserDto createUser(@RequestBody @Valid User user) {
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid User user) {
         log.info("Получен запрос Post /users. Создать пользователя {}.", user);
-        return userService.createUser(user);
+        return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@RequestBody User user,
-                              @PathVariable @Positive Long userId) {
+    public ResponseEntity<UserDto> updateUser(@RequestBody User user, @PathVariable @Positive Long userId) {
         log.info("Получен запрос Patch /users/{}. Обновить данные пользователя {}.", userId, user);
-        return userService.updateUser(userId, user);
+        return new ResponseEntity<>(userService.updateUser(userId, user), HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
