@@ -3,9 +3,13 @@ package ru.practicum.shareit.user.storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exceptions.EmailAlreadyExistException;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.exceptions.InvalidIdException;
+import ru.practicum.shareit.user.model.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 @Slf4j
@@ -30,11 +34,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> getUserById(Long userId) {
-        if (users.containsKey(userId)) {
-            return Optional.of(users.get(userId));
+    public User getUserById(Long userId) {
+        if (!users.containsKey(userId)) {
+            throw new InvalidIdException("К сожалению, пользователя с id " + userId + " нет.");
         } else {
-            return Optional.empty();
+            return users.get(userId);
         }
     }
 
@@ -67,6 +71,10 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public void deleteUser(Long userId) {
-        users.remove(userId);
+        if (!users.containsKey(userId)) {
+            throw new InvalidIdException("К сожалению, пользователя с id " + userId + " нет.");
+        } else {
+            users.remove(userId);
+        }
     }
 }

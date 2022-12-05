@@ -1,10 +1,10 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exceptions.InvalidIdException;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
@@ -30,8 +30,7 @@ public class UserController {
     @GetMapping("/{userId}")
     public UserDto findUserById(@PathVariable @Positive Long userId) {
         log.info("Получен запрос Get /users/{}. Найти пользователя по userId {}.", userId, userId);
-        return userService.findUserById(userId).orElseThrow(
-                () -> new InvalidIdException("К сожалению, пользователя с id " + userId + " нет."));
+        return userService.findUserById(userId);
     }
 
     @PostMapping
@@ -50,8 +49,6 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public void deleteUserById(@PathVariable @Positive Long userId) {
         log.info("Получен запрос Delete /users/{}. Удалить пользователя по userId {}.", userId, userId);
-        userService.findUserById(userId).orElseThrow(
-                () -> new InvalidIdException("К сожалению, пользователя с id " + userId + " нет."));
         userService.deleteUserById(userId);
     }
 }

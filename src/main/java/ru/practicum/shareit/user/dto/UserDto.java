@@ -3,12 +3,10 @@ package ru.practicum.shareit.user.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Null;
 
 @Data
-@RequiredArgsConstructor
 @Builder
 public class UserDto {
     @Null

@@ -7,7 +7,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.Collection;
@@ -37,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
             throw new InvalidIdException("Невозможно добавить предмет т.к. собственника с id = " + userId +
                     " не существует");
         }
-        User owner = userStorage.getUserById(userId).get();
+        User owner = userStorage.getUserById(userId);
         return itemMapper.toItemDto(itemStorage.createItem(item, owner));
     }
 

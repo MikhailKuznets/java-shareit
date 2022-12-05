@@ -1,9 +1,8 @@
 package ru.practicum.shareit.user.storage;
 
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface UserStorage {
 
@@ -11,7 +10,7 @@ public interface UserStorage {
 
     Collection<User> getAllUsers();
 
-    Optional<User> getUserById(Long userId);
+    User getUserById(Long userId);
 
     User createUser(User user);
 
