@@ -16,11 +16,11 @@ public class InMemoryItemStorage implements ItemStorage {
     private final Map<Long, Item> items = new HashMap<>();
 
     @Override
-    public Optional<Item> getItemById(Long itemId) {
+    public Item getItemById(Long itemId) {
         if (items.containsKey(itemId)) {
-            return Optional.of(items.get(itemId));
+            return items.get(itemId);
         } else {
-            return Optional.empty();
+            throw new InvalidIdException("К сожалению, вещи с id " + itemId + " нет.");
         }
     }
 

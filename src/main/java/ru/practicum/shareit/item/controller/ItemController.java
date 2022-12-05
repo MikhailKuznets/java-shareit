@@ -4,7 +4,6 @@ package ru.practicum.shareit.item.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exceptions.InvalidIdException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -30,13 +29,12 @@ public class ItemController {
                                @PathVariable @Positive Long itemId) {
         log.info("Получен запрос GET /items/{}. От пользователя id = {}.",
                 itemId, userId);
-        return itemService.getItemById(itemId).orElseThrow(
-                () -> new InvalidIdException("К сожалению, вещи с id " + itemId + " нет."));
+        return itemService.getItemById(itemId);
     }
 
     @GetMapping("/search")
     public Collection<ItemDto> searchItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                               @RequestParam("text") String text) {
+                                          @RequestParam("text") String text) {
         log.info("Получен запрос GET /items/search?text={}. От пользователя id = {}.",
                 text, userId);
         return itemService.searchItem(text);

@@ -4,11 +4,10 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface ItemStorage {
 
-    Optional<Item> getItemById(Long itemId);
+    Item getItemById(Long itemId);
 
     Collection<Item> getUserItems(Long userId);
 

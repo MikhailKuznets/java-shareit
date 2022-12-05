@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
@@ -17,6 +19,9 @@ import javax.validation.constraints.Size;
 @Data
 @Builder
 @Valid
+
+@Getter
+@AllArgsConstructor
 public class Item {
     private Long id;
 

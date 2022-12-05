@@ -11,7 +11,6 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,15 +19,16 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
+    private final ItemMapper itemMapper;
 
     @Override
     public Collection<ItemDto> getUserItems(Long userId) {
-        return itemStorage.getUserItems(userId).stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+        return itemStorage.getUserItems(userId).stream().map(itemMapper::toItemDto).collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ItemDto> getItemById(Long itemId) {
-        return ItemMapper.toOptionalItemDto(itemStorage.getItemById(itemId));
+    public ItemDto getItemById(Long itemId) {
+        return itemMapper.toItemDto(itemStorage.getItemById(itemId));
     }
 
     @Override
@@ -38,16 +38,16 @@ public class ItemServiceImpl implements ItemService {
                     " не существует");
         }
         User owner = userStorage.getUserById(userId).get();
-        return ItemMapper.toItemDto(itemStorage.createItem(item, owner));
+        return itemMapper.toItemDto(itemStorage.createItem(item, owner));
     }
 
     @Override
     public ItemDto updateItem(Long userId, Item item, Long itemId) {
-        return ItemMapper.toItemDto(itemStorage.updateItem(userId, item, itemId));
+        return itemMapper.toItemDto(itemStorage.updateItem(userId, item, itemId));
     }
 
     @Override
     public Collection<ItemDto> searchItem(String text) {
-        return itemStorage.searchItem(text).stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+        return itemStorage.searchItem(text).stream().map(itemMapper::toItemDto).collect(Collectors.toList());
     }
 }
