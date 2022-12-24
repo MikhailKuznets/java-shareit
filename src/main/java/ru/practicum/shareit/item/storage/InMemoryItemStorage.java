@@ -9,6 +9,7 @@ import ru.practicum.shareit.user.model.User;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Deprecated
 @Repository
 @Slf4j
 public class InMemoryItemStorage implements ItemStorage {
@@ -75,6 +76,7 @@ public class InMemoryItemStorage implements ItemStorage {
             return Collections.emptyList();
         }
         String lowerText = text.toLowerCase();
+
         return items.values().stream()
                 .filter(Item::getAvailable)
                 .filter(item -> item.getName().toLowerCase().contains(lowerText)
