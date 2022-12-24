@@ -33,6 +33,7 @@ public class Item {
     private String description;
 
     @NotNull
+    @Column(name = "is_available", nullable = false)
     private Boolean available;
 
     @ManyToOne
