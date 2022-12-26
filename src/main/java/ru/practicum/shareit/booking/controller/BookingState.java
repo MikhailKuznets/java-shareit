@@ -9,15 +9,14 @@ public enum BookingState {
     PAST,
     FUTURE,
     WAITING,
-    REJECTED,
-    UNKNOWN;
+    REJECTED;
 
-    public static BookingState of(String value) {
-        return Arrays.stream(values())
-                .filter(item -> Objects.equals(value, item.name()))
-                .findFirst()
-                .orElse(UNKNOWN);
-    }
+//    public static BookingState of(String value) {
+//        return Arrays.stream(values())
+//                .filter(item -> Objects.equals(value, item.name()))
+//                .findFirst()
+//                .orElse(UNKNOWN);
+//    }
 
 
 }

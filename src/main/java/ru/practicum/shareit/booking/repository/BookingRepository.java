@@ -1,10 +1,15 @@
 package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.exceptions.InvalidIdException;
 
-public interface BookingRepository  extends JpaRepository<Booking, Long> {
+import java.time.LocalDateTime;
+import java.util.Collection;
+
+public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     default Booking validateBooking(Long bookingId) {
         return findById(bookingId).orElseThrow(() -> {
@@ -12,5 +17,23 @@ public interface BookingRepository  extends JpaRepository<Booking, Long> {
         });
     }
 
-//    Collection<Booking> findByBooker_IdAndEndIsBefore(Long bookerId, LocalDateTime end, Sort sort);
+    Collection<Booking> findAllByBooker_Id(Long bookerId, Sort sort);
+
+    Collection<Booking> findByBooker_IdAndStartIsBeforeAndEndIsAfter(Long bookerId,
+                                                                     LocalDateTime start,
+                                                                     LocalDateTime end,
+                                                                     Sort sort);
+
+
+    Collection<Booking> findByBooker_IdAndStartIsAfterAndEndIsAfter(Long bookerId,
+                                                                    LocalDateTime start,
+                                                                    LocalDateTime end,
+                                                                    Sort sort);
+
+    Collection<Booking> findByBooker_IdAndStartIsBeforeAndEndIsBefore(Long bookerId,
+                                                                      LocalDateTime start,
+                                                                      LocalDateTime end,
+                                                                      Sort sort);
+
+    Collection<Booking> findByBooker_IdAndStatusIs(Long bookerId, BookingStatus status, Sort sort);
 }

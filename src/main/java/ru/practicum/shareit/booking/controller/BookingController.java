@@ -47,18 +47,22 @@ public class BookingController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<BookingDto>> getUserAllBookings(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                                         @RequestParam(required = false, defaultValue = "ALL")
-                                                         BookingState state) {
+    public ResponseEntity<Collection<BookingDto>> getUserAllBookings(@RequestHeader("X-Sharer-User-Id")
+                                                                     @Positive Long bookerId,
+                                                                     @RequestParam(required = false,
+                                                                             defaultValue = "ALL")
+                                                                     BookingState state) {
         log.info("Получен запрос Get /bookings?state={} . " +
                 "От пользователя с userId = {}. " +
-                "Найти его бронирования с статусом = {}.", state, userId, state);
-        return new ResponseEntity<>(bookingService.getUserAllBookings(userId, state), HttpStatus.OK);
+                "Найти его бронирования с статусом = {}.", state, bookerId, state);
+        return new ResponseEntity<>(bookingService.getUserAllBookings(bookerId, state), HttpStatus.OK);
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<Collection<BookingDto>> getOwnerItemAllBookings(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                                                          @RequestParam(required = false, defaultValue = "ALL")
+    public ResponseEntity<Collection<BookingDto>> getOwnerItemAllBookings(@RequestHeader("X-Sharer-User-Id")
+                                                                          @Positive Long userId,
+                                                                          @RequestParam(required = false,
+                                                                                  defaultValue = "ALL")
                                                                           BookingState state) {
         log.info("Получен запрос Get /bookings/owner?state={} . " +
                 "От пользователя с userId = {}. " +
