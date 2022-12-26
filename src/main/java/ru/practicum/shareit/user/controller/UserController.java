@@ -22,31 +22,32 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Collection<UserDto>> findAllUsers() {
-        log.info("Получен запрос Get /users. Получить всех пользователей.");
+        log.info("Получен запрос Get /users . Получить всех пользователей.");
         return new ResponseEntity<>(userService.findAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> findUserById(@PathVariable @Positive Long userId) {
-        log.info("Получен запрос Get /users/{}. Найти пользователя по userId {}.", userId, userId);
+        log.info("Получен запрос Get /users/{} . Найти пользователя по userId {}.", userId, userId);
         return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid User user) {
-        log.info("Получен запрос Post /users. Создать пользователя {}.", user);
+        log.info("Получен запрос Post /users . Создать пользователя: {}.", user);
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody User user, @PathVariable @Positive Long userId) {
-        log.info("Получен запрос Patch /users/{}. Обновить данные пользователя {}.", userId, user);
+    public ResponseEntity<UserDto> updateUser(@RequestBody User user,
+                                              @PathVariable @Positive Long userId) {
+        log.info("Получен запрос Patch /users/{} . Обновить данные пользователя: {}.", userId, user);
         return new ResponseEntity<>(userService.updateUser(userId, user), HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUserById(@PathVariable @Positive Long userId) {
-        log.info("Получен запрос Delete /users/{}. Удалить пользователя по userId {}.", userId, userId);
+        log.info("Получен запрос Delete /users/{} . Удалить пользователя по userId {}.", userId, userId);
         userService.deleteUserById(userId);
     }
 }

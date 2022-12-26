@@ -1,9 +1,9 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.controller;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-public enum BookingStatus {
+public enum BookingState {
     ALL,
     CURRENT,
     PAST,
@@ -12,7 +12,7 @@ public enum BookingStatus {
     REJECTED,
     UNKNOWN;
 
-    public static BookingStatus of(String value) {
+    public static BookingState of(String value) {
         return Arrays.stream(values())
                 .filter(item -> Objects.equals(value, item.name()))
                 .findFirst()

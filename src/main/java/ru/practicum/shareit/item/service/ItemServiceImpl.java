@@ -26,39 +26,27 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDto> getUserItems(Long userId) {
-        Collection<Item> userItems = itemRepository.findAllByOwnerIdOrderByIdAsc(userId);
+        Collection<Item> userItems = itemRepository.findAllByOwner_IdOrderByIdAsc(userId);
         return userItems.stream().map(itemMapper::toItemDto).collect(Collectors.toList());
     }
 
     @Override
     public ItemDto getItemById(Long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> {
-            throw new InvalidIdException("К сожалению, вещи с id " + itemId + " нет.");
-        });
-        return itemMapper.toItemDto(item);
+        return itemMapper.toItemDto(itemRepository.validateItem(itemId));
     }
 
     @Override
     public ItemDto createItem(Item item, Long userId) {
-        User owner = userRepository.findById(userId).orElseThrow(() -> {
-            throw new InvalidIdException("Невозможно добавить предмет т.к. собственника с id = " + userId +
-                    " не существует");
-        });
+        User owner = userRepository.validateUser(userId);
         item.setOwner(owner);
         return itemMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
     public ItemDto updateItem(Long userId, Item item, Long itemId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new InvalidIdException("Невозможно добавить предмет т.к. собственника с id = " + userId +
-                    " не существует");
-        });
+        User owner = userRepository.validateUser(userId);
 
-        Item selectedItem = itemRepository.findById(itemId).orElseThrow(() -> {
-            throw new InvalidIdException("Невозможно добавить предмет т.к. предмета с id = " + itemId +
-                    " не существует");
-        });
+        Item selectedItem = itemRepository.validateItem(itemId);
 
         Long currentItemUserId = selectedItem.getOwner().getId();
 

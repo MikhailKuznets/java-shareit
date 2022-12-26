@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking.model;
 
 import lombok.Data;
-import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.controller.BookingState;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -37,5 +37,5 @@ public class Booking {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private BookingStatus status = BookingStatus.WAITING;
+    private BookingState status = BookingState.WAITING;
 }

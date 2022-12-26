@@ -29,15 +29,15 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemDto> getItemById(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
                                                @PathVariable @Positive Long itemId) {
-        log.info("Получен запрос GET /items/{}. От пользователя id = {}.",
+        log.info("Получен запрос GET /items/{} . От пользователя id = {}.",
                 itemId, userId);
         return new ResponseEntity<>(itemService.getItemById(itemId), HttpStatus.OK);
     }
 
     @GetMapping("/search")
     public ResponseEntity<Collection<ItemDto>> searchItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                                          @RequestParam("text") String text) {
-        log.info("Получен запрос GET /items/search?text={}. От пользователя id = {}.",
+                                                          @RequestParam String text) {
+        log.info("Получен запрос GET /items/search?text={} . От пользователя id = {}.",
                 text, userId);
         return new ResponseEntity<>(itemService.searchItem(text), HttpStatus.OK);
     }
@@ -45,7 +45,7 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<ItemDto> createItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
                                               @RequestBody @Valid Item item) {
-        log.info("Получен запрос Post /items. От пользователя id = {}, добавить вещь: {}", userId, item);
+        log.info("Получен запрос Post /items . От пользователя id = {}, добавить вещь: {}", userId, item);
         return new ResponseEntity<>(itemService.createItem(item, userId), HttpStatus.OK);
     }
 
@@ -53,7 +53,7 @@ public class ItemController {
     public ResponseEntity<ItemDto> updateItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
                                               @PathVariable @Positive Long itemId,
                                               @RequestBody Item item) {
-        log.info("Получен запрос Patch /items/{}. От пользователя id = {}, обновить данные вещи {}.",
+        log.info("Получен запрос Patch /items/{} . От пользователя id = {}, обновить данные вещи {}.",
                 itemId, userId, item);
         return new ResponseEntity<>(itemService.updateItem(userId, item, itemId), HttpStatus.OK);
     }

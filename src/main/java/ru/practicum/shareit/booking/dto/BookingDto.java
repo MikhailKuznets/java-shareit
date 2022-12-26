@@ -1,6 +1,6 @@
 package ru.practicum.shareit.booking.dto;
 
-import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.controller.BookingState;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -16,6 +16,5 @@ public class BookingDto {
 
     private ItemDto item;
     private UserDto booker;
-
-    private BookingStatus status;
+    private BookingState status;
 }
