@@ -29,9 +29,11 @@ public class ErrorHandler {
     }
 
 
-    @ExceptionHandler(InvalidStatusException.class)
+    @ExceptionHandler({BookingUnavailableException.class,
+            BookingInvalidTimeException.class,
+            BookingAlreadyApprovedException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleInvalidStatusException(final InvalidStatusException e) {
+    public ErrorResponse handleBookingException(final RuntimeException e) {
         log.error("BAD REQUEST , КОД 400 - {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
@@ -40,10 +42,7 @@ public class ErrorHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnknownBookingState(final MethodArgumentTypeMismatchException e) {
-        log.warn("BAD REQUEST , КОД 400 - {}", e.getMessage());
-        log.error("e.getParameter() = {}", e.getParameter());
-        log.error("e.getName() = {}", e.getName());
-        log.error("e.getValue() = {}", e.getValue());
+        log.error("BAD REQUEST , КОД 400 - {}", e.getMessage());
         return new ErrorResponse("Unknown " + e.getName() + ": " + e.getValue());
     }
 

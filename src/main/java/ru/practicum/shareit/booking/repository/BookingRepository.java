@@ -24,7 +24,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                                                      LocalDateTime end,
                                                                      Sort sort);
 
-
     Collection<Booking> findByBooker_IdAndStartIsAfterAndEndIsAfter(Long bookerId,
                                                                     LocalDateTime start,
                                                                     LocalDateTime end,
@@ -36,4 +35,25 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                                                       Sort sort);
 
     Collection<Booking> findByBooker_IdAndStatusIs(Long bookerId, BookingStatus status, Sort sort);
+
+    Collection<Booking> findByItemOwnerId(Long ownerId, Sort sort);
+
+    Collection<Booking> findByItemOwnerIdAndStartIsBeforeAndEndIsAfter(Long ownerId,
+                                                                       LocalDateTime start,
+                                                                       LocalDateTime end,
+                                                                       Sort sort);
+
+    Collection<Booking> findByItemOwnerIdAndStartIsAfterAndEndIsAfter(Long ownerId,
+                                                                      LocalDateTime start,
+                                                                      LocalDateTime end,
+                                                                      Sort sort);
+
+    Collection<Booking> findByItemOwnerIdAndStartIsBeforeAndEndIsBefore(Long ownerId,
+                                                                        LocalDateTime start,
+                                                                        LocalDateTime end,
+                                                                        Sort sort);
+
+    Collection<Booking> findByItemOwnerIdAndStatusIs(Long ownerId,
+                                                     BookingStatus status,
+                                                     Sort sort);
 }

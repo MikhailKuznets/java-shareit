@@ -1,8 +1,6 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -12,11 +10,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-//@Builder
 @Valid
 @Entity
 @Table(name = "users")
-//@NoArgsConstructor
 public class User {
 
     @Id

@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.dto.BookingResponseDto;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
@@ -21,17 +21,19 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public ResponseEntity<BookingDto> createBooking(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                                    @RequestBody @Valid Booking booking) {
+    public ResponseEntity<BookingResponseDto> createBooking(@RequestHeader("X-Sharer-User-Id")
+                                                    @Positive Long userId,
+                                                            @RequestBody @Valid BookingRequestDto dto) {
         log.info("Получен запрос POST /bookings . " +
-                "От пользователя с userId = {}. Создать бронирование: {}.", userId, booking);
-        return new ResponseEntity<>(bookingService.createBooking(booking, userId), HttpStatus.OK);
+                "От пользователя с userId = {}. Создать бронирование: {}.", userId, dto);
+        return new ResponseEntity<>(bookingService.createBooking(dto, userId), HttpStatus.OK);
     }
 
-    @PatchMapping("/{bookingId}?approved={}")
-    public ResponseEntity<BookingDto> approveBooking(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                                     @PathVariable @Positive Long bookingId,
-                                                     @RequestParam(name = "approved") Boolean isApproved) {
+    @PatchMapping("/{bookingId}")
+    public ResponseEntity<BookingResponseDto> approveBooking(@RequestHeader("X-Sharer-User-Id")
+                                                     @Positive Long userId,
+                                                             @PathVariable @Positive Long bookingId,
+                                                             @RequestParam(name = "approved") Boolean isApproved) {
         log.info("Получен запрос Patch /bookings/{}?approved={} . " +
                 "От пользователя с userId = {}. " +
                 "Подтвердить/отклонить бронирование с bookingId = {}.", bookingId, isApproved, userId, bookingId);
@@ -39,17 +41,18 @@ public class BookingController {
     }
 
     @GetMapping("/{bookingId}")
-    public ResponseEntity<BookingDto> getBookingById(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                                     @PathVariable @Positive Long bookingId) {
+    public ResponseEntity<BookingResponseDto> getBookingById(@RequestHeader("X-Sharer-User-Id")
+                                                     @Positive Long userId,
+                                                             @PathVariable @Positive Long bookingId) {
         log.info("Получен запрос Get /bookings/{} . " +
                 "От пользователя с userId = {}. Найти бронирование с bookingId = {}.", bookingId, userId, bookingId);
         return new ResponseEntity<>(bookingService.getBookingById(bookingId, userId), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<Collection<BookingDto>> getUserAllBookings(@RequestHeader("X-Sharer-User-Id")
+    public ResponseEntity<Collection<BookingResponseDto>> getUserAllBookings(@RequestHeader("X-Sharer-User-Id")
                                                                      @Positive Long bookerId,
-                                                                     @RequestParam(required = false,
+                                                                             @RequestParam(required = false,
                                                                              defaultValue = "ALL")
                                                                      BookingState state) {
         log.info("Получен запрос Get /bookings?state={} . " +
@@ -59,9 +62,9 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<Collection<BookingDto>> getOwnerItemAllBookings(@RequestHeader("X-Sharer-User-Id")
+    public ResponseEntity<Collection<BookingResponseDto>> getOwnerItemAllBookings(@RequestHeader("X-Sharer-User-Id")
                                                                           @Positive Long userId,
-                                                                          @RequestParam(required = false,
+                                                                                  @RequestParam(required = false,
                                                                                   defaultValue = "ALL")
                                                                           BookingState state) {
         log.info("Получен запрос Get /bookings/owner?state={} . " +
