@@ -95,8 +95,6 @@ public class BookingServiceImpl implements BookingService {
         Long bookerId = booker.getId();
         Long ownerId = owner.getId();
 
-        log.error("UserId = " + userId + ", BookerId = " + bookerId + ", BookerId = " + ownerId);
-
         if (!(bookerId.equals(userId) || ownerId.equals(userId))) {
             throw new InvalidIdException("Нет прав на просмотр бронирования. Пользователь с userId = "
                     + userId + " не является создателем бронирования или собственником предмета");
@@ -149,26 +147,26 @@ public class BookingServiceImpl implements BookingService {
 
         switch (state) {
             case ALL:
-                bookings = bookingRepository.findByItemOwnerId(ownerId, SORT_BY_START_DESC);
+                bookings = bookingRepository.findByItem_Owner_Id(ownerId, SORT_BY_START_DESC);
                 break;
             case CURRENT:
-                bookings = bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsAfter(
+                bookings = bookingRepository.findByItem_Owner_IdAndStartIsBeforeAndEndIsAfter(
                         ownerId, LocalDateTime.now(), LocalDateTime.now(), SORT_BY_START_DESC);
                 break;
             case FUTURE:
-                bookings = bookingRepository.findByItemOwnerIdAndStartIsAfterAndEndIsAfter(
+                bookings = bookingRepository.findByItem_Owner_IdAndStartIsAfterAndEndIsAfter(
                         ownerId, LocalDateTime.now(), LocalDateTime.now(), SORT_BY_START_DESC);
                 break;
             case PAST:
-                bookings = bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsBefore(
+                bookings = bookingRepository.findByItem_Owner_IdAndStartIsBeforeAndEndIsBefore(
                         ownerId, LocalDateTime.now(), LocalDateTime.now(), SORT_BY_START_DESC);
                 break;
             case WAITING:
-                bookings = bookingRepository.findByItemOwnerIdAndStatusIs(
+                bookings = bookingRepository.findByItem_Owner_IdAndStatusIs(
                         ownerId, BookingStatus.WAITING, SORT_BY_START_DESC);
                 break;
             case REJECTED:
-                bookings = bookingRepository.findByItemOwnerIdAndStatusIs(
+                bookings = bookingRepository.findByItem_Owner_IdAndStatusIs(
                         ownerId, BookingStatus.REJECTED, SORT_BY_START_DESC);
                 break;
             default:

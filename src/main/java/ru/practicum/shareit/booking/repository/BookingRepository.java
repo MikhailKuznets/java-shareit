@@ -36,26 +36,26 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Collection<Booking> findByBooker_IdAndStatusIs(Long bookerId, BookingStatus status, Sort sort);
 
-    Collection<Booking> findByItemOwnerId(Long ownerId, Sort sort);
+    Collection<Booking> findByItem_Owner_Id(Long ownerId, Sort sort);
 
-    Collection<Booking> findByItemOwnerIdAndStartIsBeforeAndEndIsAfter(Long ownerId,
-                                                                       LocalDateTime start,
-                                                                       LocalDateTime end,
-                                                                       Sort sort);
+    Collection<Booking> findByItem_Owner_IdAndStartIsBeforeAndEndIsAfter(Long ownerId,
+                                                                         LocalDateTime start,
+                                                                         LocalDateTime end,
+                                                                         Sort sort);
 
-    Collection<Booking> findByItemOwnerIdAndStartIsAfterAndEndIsAfter(Long ownerId,
-                                                                      LocalDateTime start,
-                                                                      LocalDateTime end,
-                                                                      Sort sort);
-
-    Collection<Booking> findByItemOwnerIdAndStartIsBeforeAndEndIsBefore(Long ownerId,
+    Collection<Booking> findByItem_Owner_IdAndStartIsAfterAndEndIsAfter(Long ownerId,
                                                                         LocalDateTime start,
                                                                         LocalDateTime end,
                                                                         Sort sort);
 
-    Collection<Booking> findByItemOwnerIdAndStatusIs(Long ownerId,
-                                                     BookingStatus status,
-                                                     Sort sort);
+    Collection<Booking> findByItem_Owner_IdAndStartIsBeforeAndEndIsBefore(Long ownerId,
+                                                                          LocalDateTime start,
+                                                                          LocalDateTime end,
+                                                                          Sort sort);
+
+    Collection<Booking> findByItem_Owner_IdAndStatusIs(Long ownerId,
+                                                       BookingStatus status,
+                                                       Sort sort);
 
     Booking findFirstByItem_IdAndEndIsBeforeOrderByEndDesc(Long itemId, LocalDateTime now);
 

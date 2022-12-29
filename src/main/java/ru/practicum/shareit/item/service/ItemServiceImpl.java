@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -24,8 +23,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ItemServiceImpl implements ItemService {
-    private static final Sort SORT_BY_START_ASC = Sort.by(Sort.Direction.ASC, "start");
-    private static final Sort SORT_BY_END_DESC = Sort.by(Sort.Direction.DESC, "end");
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
@@ -35,8 +32,11 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Collection<ItemResponseDto> getUserItems(Long userId) {
         Collection<Item> userItems = itemRepository.findAllByOwner_IdOrderByIdAsc(userId);
-
-        return userItems.stream().map(itemMapper::toItemResponseDto).collect(Collectors.toList());
+        Collection<ItemResponseDto> userItemsDto = userItems.stream()
+                .map(itemMapper::toItemResponseDto)
+                .map(this::setBookings)
+                .collect(Collectors.toList());
+        return userItemsDto;
     }
 
     @Override
@@ -45,7 +45,6 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.validateUser(userId);
 
         ItemResponseDto itemDto = itemMapper.toItemResponseDto(item);
-
         if (item.getOwner().getId().equals(userId)) {
             itemDto = setBookings(itemDto);
         }
@@ -103,20 +102,14 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemResponseDto setBookings(ItemResponseDto itemDto) {
         Long itemId = itemDto.getId();
-
         //   Last booking
         Booking lastBooking = bookingRepository.findFirstByItem_IdAndEndIsBeforeOrderByEndDesc(
                 itemId, LocalDateTime.now());
         itemDto.setLastBooking(bookingMapper.toBookingDtoForItem(lastBooking));
-
         //   Next booking
         Booking nextBooking = bookingRepository.findFirstByItem_IdAndStartIsAfterOrderByStartAsc(
                 itemId, LocalDateTime.now());
         itemDto.setNextBooking(bookingMapper.toBookingDtoForItem(nextBooking));
-
-        log.error(lastBooking.toString());
-        log.error(nextBooking.toString());
-
         return itemDto;
     }
 
