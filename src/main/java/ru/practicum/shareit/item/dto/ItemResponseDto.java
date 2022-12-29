@@ -1,15 +1,12 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.*;
+import lombok.Data;
+import ru.practicum.shareit.booking.dto.BookingDtoForItems;
 
 import javax.validation.constraints.Size;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
-@Builder
-public class ItemDto {
+public class ItemResponseDto {
     private Long id;
 
     @Size(max = 255)
@@ -20,4 +17,7 @@ public class ItemDto {
 
     private Boolean available;
 
+    private BookingDtoForItems lastBooking;
+
+    private BookingDtoForItems nextBooking;
 }

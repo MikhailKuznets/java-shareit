@@ -75,7 +75,11 @@ public class BookingServiceImpl implements BookingService {
             throw new BookingAlreadyApprovedException("Данное бронирование уже подтверждено");
         }
 
-        booking.setStatus(BookingStatus.APPROVED);
+        if (isApproved) {
+            booking.setStatus(BookingStatus.APPROVED);
+        } else {
+            booking.setStatus(BookingStatus.REJECTED);
+        }
 
         return bookingMapper.toBookingResponseDto(bookingRepository.save(booking));
     }

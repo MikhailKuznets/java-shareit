@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
@@ -22,7 +22,7 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<BookingResponseDto> createBooking(@RequestHeader("X-Sharer-User-Id")
-                                                    @Positive Long userId,
+                                                            @Positive Long userId,
                                                             @RequestBody @Valid BookingRequestDto dto) {
         log.info("Получен запрос POST /bookings . " +
                 "От пользователя с userId = {}. Создать бронирование: {}.", userId, dto);
@@ -31,7 +31,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingResponseDto> approveBooking(@RequestHeader("X-Sharer-User-Id")
-                                                     @Positive Long userId,
+                                                             @Positive Long userId,
                                                              @PathVariable @Positive Long bookingId,
                                                              @RequestParam(name = "approved") Boolean isApproved) {
         log.info("Получен запрос Patch /bookings/{}?approved={} . " +
@@ -42,7 +42,7 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingResponseDto> getBookingById(@RequestHeader("X-Sharer-User-Id")
-                                                     @Positive Long userId,
+                                                             @Positive Long userId,
                                                              @PathVariable @Positive Long bookingId) {
         log.info("Получен запрос Get /bookings/{} . " +
                 "От пользователя с userId = {}. Найти бронирование с bookingId = {}.", bookingId, userId, bookingId);
@@ -51,10 +51,10 @@ public class BookingController {
 
     @GetMapping
     public ResponseEntity<Collection<BookingResponseDto>> getUserAllBookings(@RequestHeader("X-Sharer-User-Id")
-                                                                     @Positive Long bookerId,
+                                                                             @Positive Long bookerId,
                                                                              @RequestParam(required = false,
-                                                                             defaultValue = "ALL")
-                                                                     BookingState state) {
+                                                                                     defaultValue = "ALL")
+                                                                             BookingState state) {
         log.info("Получен запрос Get /bookings?state={} . " +
                 "От пользователя с userId = {}. " +
                 "Найти его бронирования с статусом = {}.", state, bookerId, state);
@@ -63,10 +63,10 @@ public class BookingController {
 
     @GetMapping("/owner")
     public ResponseEntity<Collection<BookingResponseDto>> getOwnerItemAllBookings(@RequestHeader("X-Sharer-User-Id")
-                                                                          @Positive Long userId,
+                                                                                  @Positive Long userId,
                                                                                   @RequestParam(required = false,
-                                                                                  defaultValue = "ALL")
-                                                                          BookingState state) {
+                                                                                          defaultValue = "ALL")
+                                                                                  BookingState state) {
         log.info("Получен запрос Get /bookings/owner?state={} . " +
                 "От пользователя с userId = {}. " +
                 "Найти бронирования с статусом = {} для всех его предметов.", state, userId, state);

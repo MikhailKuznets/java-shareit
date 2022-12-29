@@ -1,18 +1,18 @@
 package ru.practicum.shareit.booking.dto;
 
 import lombok.Data;
+import org.mapstruct.Mapping;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.dto.ItemResponseDto;
-import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
 @Data
-public class BookingResponseDto {
+public class BookingDtoForItems {
     private Long id;
     private LocalDateTime start;
     private LocalDateTime end;
-    private ItemResponseDto item;
-    private UserDto booker;
+    private Long bookerId;
     private BookingStatus status;
 }
+
+
