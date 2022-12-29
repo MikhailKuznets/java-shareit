@@ -31,7 +31,8 @@ public class ErrorHandler {
 
     @ExceptionHandler({BookingUnavailableException.class,
             BookingInvalidTimeException.class,
-            BookingAlreadyApprovedException.class})
+            BookingAlreadyApprovedException.class,
+            BookingNotFinishedException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingException(final RuntimeException e) {
         log.error("BAD REQUEST , КОД 400 - {}", e.getMessage());

@@ -11,7 +11,6 @@ import javax.validation.constraints.Size;
 
 @Data
 @Valid
-@Getter
 @Entity
 @Table(name = "items")
 public class Item {
@@ -39,6 +38,4 @@ public class Item {
     @JoinColumn(name = "owner_id")
 //    @ToString.Exclude
     private User owner;
-
-//    private ItemRequest request;
 }
