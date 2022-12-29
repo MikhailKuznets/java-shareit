@@ -9,7 +9,7 @@ import java.util.Objects;
 public interface CommentMapper {
     Comment toCommentFromRequestDto(CommentRequestDto commentRequestDto);
 
-    default CommentResponseDto toCommentResponseDto(Comment comment){
+    default CommentResponseDto toCommentResponseDto(Comment comment) {
         if (Objects.isNull(comment)) {
             return null;
         }
@@ -19,5 +19,5 @@ public interface CommentMapper {
         commentResponseDto.setAuthorName(comment.getAuthor().getName());
         commentResponseDto.setCreated(comment.getCreated());
         return commentResponseDto;
-    };
+    }
 }
