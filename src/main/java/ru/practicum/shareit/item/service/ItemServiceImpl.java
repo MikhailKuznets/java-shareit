@@ -132,11 +132,11 @@ public class ItemServiceImpl implements ItemService {
         Long itemId = itemDto.getId();
         //   Last booking
         Booking lastBooking = bookingRepository.findFirstByItem_IdAndEndIsBeforeOrderByEndDesc(
-                itemId, LocalDateTime.now());
+                itemId, LocalDateTime.now()).orElse(null);
         itemDto.setLastBooking(bookingMapper.toBookingDtoForItem(lastBooking));
         //   Next booking
         Booking nextBooking = bookingRepository.findFirstByItem_IdAndStartIsAfterOrderByStartAsc(
-                itemId, LocalDateTime.now());
+                itemId, LocalDateTime.now()).orElse(null);
         itemDto.setNextBooking(bookingMapper.toBookingDtoForItem(nextBooking));
         return itemDto;
     }

@@ -89,10 +89,16 @@ public class BookingServiceImpl implements BookingService {
         userRepository.validateUser(userId);
 
         Booking booking = bookingRepository.validateBooking(bookingId);
-        User booker = booking.getBooker();
-        User owner = booking.getItem().getOwner();
 
+        User booker = booking.getBooker();
         Long bookerId = booker.getId();
+
+        Item item = booking.getItem();
+        User owner = item.getOwner();
+        if (owner == null) {
+            throw new InvalidIdException("Ошибка проверки собственника предмета");
+        }
+
         Long ownerId = owner.getId();
 
         if (!(bookerId.equals(userId) || ownerId.equals(userId))) {

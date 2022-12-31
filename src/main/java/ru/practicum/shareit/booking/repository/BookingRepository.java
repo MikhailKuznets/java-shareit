@@ -8,6 +8,7 @@ import ru.practicum.shareit.exceptions.InvalidIdException;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
@@ -57,11 +58,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                                        BookingStatus status,
                                                        Sort sort);
 
-    Booking findFirstByItem_IdAndEndIsBeforeOrderByEndDesc(Long itemId, LocalDateTime now);
+    Optional<Booking> findFirstByItem_IdAndEndIsBeforeOrderByEndDesc(Long itemId, LocalDateTime now);
 
-    Booking findFirstByItem_IdAndStartIsAfterOrderByStartAsc(Long itemId, LocalDateTime now);
+    Optional<Booking> findFirstByItem_IdAndStartIsAfterOrderByStartAsc(Long itemId, LocalDateTime now);
 
-    boolean existsBookingByItem_IdAndBooker_IdAndStatusAndEndIsBefore(Long itemId,
+    Boolean existsBookingByItem_IdAndBooker_IdAndStatusAndEndIsBefore(Long itemId,
                                                                       Long userId,
                                                                       BookingStatus status,
                                                                       LocalDateTime now);
