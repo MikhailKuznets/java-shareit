@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
 @RestControllerAdvice
@@ -28,10 +29,29 @@ public class ErrorHandler {
     }
 
 
+    @ExceptionHandler({BookingUnavailableException.class,
+            BookingInvalidTimeException.class,
+            BookingAlreadyApprovedException.class,
+            BookingNotFinishedException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBookingException(final RuntimeException e) {
+        log.error("BAD REQUEST , КОД 400 - {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleUnknownBookingState(final MethodArgumentTypeMismatchException e) {
+        log.error("BAD REQUEST , КОД 400 - {}", e.getMessage());
+        return new ErrorResponse("Unknown " + e.getName() + ": " + e.getValue());
+    }
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidateParameterException(final MethodArgumentNotValidException e) {
-        log.error("КОД 404 - Ошибка валидации данных: {}", e.getMessage());
+        log.error("КОД 400 - Ошибка валидации данных: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
