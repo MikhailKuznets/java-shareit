@@ -16,6 +16,7 @@ import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
 @RestController
@@ -27,7 +28,13 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<Collection<ItemResponseDto>> getUserItems(@RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
+    public ResponseEntity<Collection<ItemResponseDto>> getUserItems(
+            @RequestHeader("X-Sharer-User-Id") @Positive Long userId,
+            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
+        log.info("Получен запрос GET /items . От пользователя id = {} на просмотр собственных предметов. " +
+                        "Отображать по {} предметов на странице, начиная с itemId = {}.",
+                userId, size, from);
         return new ResponseEntity<>(itemService.getUserItems(userId), HttpStatus.OK);
     }
 
@@ -40,10 +47,14 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Collection<ItemResponseDto>> searchItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                                                  @RequestParam String text) {
-        log.info("Получен запрос GET /items/search?text={} . От пользователя id = {}.",
-                text, userId);
+    public ResponseEntity<Collection<ItemResponseDto>> searchItem(
+            @RequestHeader("X-Sharer-User-Id") @Positive Long userId,
+            @RequestParam String text,
+            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
+        log.info("Получен запрос GET /items/search?text={} . От пользователя id = {} на поиск предмета: {}" +
+                        "Отображать по {} предметов на странице, начиная с itemId = {}.",
+                text, userId, text, size, from);
         return new ResponseEntity<>(itemService.searchItem(text), HttpStatus.OK);
     }
 

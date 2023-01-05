@@ -60,8 +60,7 @@ public class ItemRequestController {
                         "Найти запросы других пользователей на добавление предметов. " +
                         "Отображать по {} запросов на странице, начиная с requestId = {}.",
                 from, size, userId, size, from);
-        return new ResponseEntity<>(itemRequestService.getAllRequestByOtherUsers(
-                userId, from, size), HttpStatus.OK);
+        return new ResponseEntity<>(itemRequestService.getAllRequestByOtherUsers(userId, from, size), HttpStatus.OK);
     }
 
 }

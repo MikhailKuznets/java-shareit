@@ -66,10 +66,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public Collection<ItemReqResponseDto> getAllRequestByOtherUsers(Long userId, Integer fromId, Integer size) {
+    public Collection<ItemReqResponseDto> getAllRequestByOtherUsers(Long userId, Integer from, Integer size) {
         userRepository.validateUser(userId);
 
-        PageRequest pageRequest = PageRequest.of((fromId / size), size, SORT_BY_CREATED_DESC);
+        PageRequest pageRequest = PageRequest.of((from / size), size, SORT_BY_CREATED_DESC);
 
         Page<ItemRequest> page = itemRequestRepository.findByRequesterIdIsNot(userId, pageRequest);
         Collection<ItemRequest> requests = page.getContent();
