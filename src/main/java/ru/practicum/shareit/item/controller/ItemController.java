@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.comment.dto.CommentRequestDto;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
+import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -48,9 +49,9 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ItemResponseDto> createItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                                      @RequestBody @Valid Item item) {
-        log.info("Получен запрос Post /items . От пользователя id = {}, добавить вещь: {}", userId, item);
-        return new ResponseEntity<>(itemService.createItem(item, userId), HttpStatus.OK);
+                                                      @RequestBody @Valid ItemRequestDto itemDto) {
+        log.info("Получен запрос Post /items . От пользователя id = {}, добавить вещь: {}", userId, itemDto);
+        return new ResponseEntity<>(itemService.createItem(itemDto, userId), HttpStatus.OK);
     }
 
     @PatchMapping("/{itemId}")

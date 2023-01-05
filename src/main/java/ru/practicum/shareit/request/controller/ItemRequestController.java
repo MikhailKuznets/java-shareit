@@ -52,10 +52,10 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Collection<ItemReqResponseDto>> getAllRequestByOtherUsers(
+    public ResponseEntity<Collection<ItemReqResponseDto>> getAllRequestsByOtherUsers(
             @RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Long from,
-            @RequestParam(defaultValue = "10", required = false) @Positive Long size) {
+            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
         log.info("Получен запрос Get /requests/all?from={}&size={} . От пользователя с userId = {}. " +
                         "Найти запросы других пользователей на добавление предметов. " +
                         "Отображать по {} запросов на странице, начиная с requestId = {}.",

@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 @Mapper(componentModel = "spring")
-public interface RequestMapper {
+public interface ItemRequestMapper {
     ItemRequest toItemRequest(ItemReqRequestDto itemReqRequestDto);
 
     ItemReqResponseDto toItemRequestDto(ItemRequest itemRequest);

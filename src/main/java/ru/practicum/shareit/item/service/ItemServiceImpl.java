@@ -15,15 +15,19 @@ import ru.practicum.shareit.comment.repository.CommentRepository;
 import ru.practicum.shareit.exceptions.BookingNotFinishedException;
 import ru.practicum.shareit.exceptions.InvalidIdException;
 import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +38,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
     private final ItemMapper itemMapper;
     private final BookingMapper bookingMapper;
     private final CommentMapper commentMapper;
@@ -64,9 +69,18 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponseDto createItem(Item item, Long userId) {
+    public ItemResponseDto createItem(ItemRequestDto itemDto, Long userId) {
         User owner = userRepository.validateUser(userId);
+
+        Item item = itemMapper.toItem(itemDto);
         item.setOwner(owner);
+
+        Long requestId = itemDto.getRequestId();
+        if (Objects.nonNull(requestId)) {
+            ItemRequest request = itemRequestRepository.validateItemRequest(itemDto.getRequestId());
+            item.setRequest(request);
+        }
+
         return itemMapper.toItemResponseDto(itemRepository.save(item));
     }
 
