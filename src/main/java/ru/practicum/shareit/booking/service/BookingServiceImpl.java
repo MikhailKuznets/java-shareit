@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.controller.BookingState;
@@ -109,35 +111,39 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingResponseDto> getUserAllBookings(Long bookerId, BookingState state) {
+    public Collection<BookingResponseDto> getUserAllBookings(Long bookerId,
+                                                             BookingState state,
+                                                             Integer from,
+                                                             Integer size) {
         userRepository.validateUser(bookerId);
         LocalDateTime now = LocalDateTime.now();
-        Collection<Booking> bookings;
+
+        PageRequest pageRequest = PageRequest.of((from / size), size, SORT_BY_START_DESC);
+        Page<Booking> bookings;
 
         switch (state) {
             case ALL:
-                bookings = bookingRepository.findAllByBooker_Id(bookerId,
-                        SORT_BY_START_DESC);
+                bookings = bookingRepository.findAllByBooker_Id(bookerId, pageRequest);
                 break;
             case CURRENT:
                 bookings = bookingRepository.findByBooker_IdAndStartIsBeforeAndEndIsAfter(bookerId, now, now,
-                        SORT_BY_START_DESC);
+                        pageRequest);
                 break;
             case FUTURE:
                 bookings = bookingRepository.findByBooker_IdAndStartIsAfterAndEndIsAfter(bookerId, now, now,
-                        SORT_BY_START_DESC);
+                        pageRequest);
                 break;
             case PAST:
                 bookings = bookingRepository.findByBooker_IdAndStartIsBeforeAndEndIsBefore(bookerId, now, now,
-                        SORT_BY_START_DESC);
+                        pageRequest);
                 break;
             case WAITING:
                 bookings = bookingRepository.findByBooker_IdAndStatusIs(bookerId, BookingStatus.WAITING,
-                        SORT_BY_START_DESC);
+                        pageRequest);
                 break;
             case REJECTED:
                 bookings = bookingRepository.findByBooker_IdAndStatusIs(bookerId, BookingStatus.REJECTED,
-                        SORT_BY_START_DESC);
+                        pageRequest);
                 break;
             default:
                 throw new InvalidStatusException("Неподдерживаемый BookingState: " + state.name());
@@ -146,34 +152,38 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingResponseDto> getOwnerItemAllBookings(Long ownerId, BookingState state) {
-        User user = userRepository.validateUser(ownerId);
+    public Collection<BookingResponseDto> getOwnerItemAllBookings(Long ownerId,
+                                                                  BookingState state,
+                                                                  Integer from,
+                                                                  Integer size) {
+        userRepository.validateUser(ownerId);
         LocalDateTime now = LocalDateTime.now();
-        Collection<Booking> bookings;
 
+        PageRequest pageRequest = PageRequest.of(from, size, SORT_BY_START_DESC);
+        Page<Booking> bookings;
         switch (state) {
             case ALL:
-                bookings = bookingRepository.findByItem_Owner_Id(ownerId, SORT_BY_START_DESC);
+                bookings = bookingRepository.findByItem_Owner_Id(ownerId, pageRequest);
                 break;
             case CURRENT:
                 bookings = bookingRepository.findByItem_Owner_IdAndStartIsBeforeAndEndIsAfter(
-                        ownerId, LocalDateTime.now(), LocalDateTime.now(), SORT_BY_START_DESC);
+                        ownerId, now, now, pageRequest);
                 break;
             case FUTURE:
                 bookings = bookingRepository.findByItem_Owner_IdAndStartIsAfterAndEndIsAfter(
-                        ownerId, LocalDateTime.now(), LocalDateTime.now(), SORT_BY_START_DESC);
+                        ownerId, now, now, pageRequest);
                 break;
             case PAST:
                 bookings = bookingRepository.findByItem_Owner_IdAndStartIsBeforeAndEndIsBefore(
-                        ownerId, LocalDateTime.now(), LocalDateTime.now(), SORT_BY_START_DESC);
+                        ownerId, now, now, pageRequest);
                 break;
             case WAITING:
                 bookings = bookingRepository.findByItem_Owner_IdAndStatusIs(
-                        ownerId, BookingStatus.WAITING, SORT_BY_START_DESC);
+                        ownerId, BookingStatus.WAITING, pageRequest);
                 break;
             case REJECTED:
                 bookings = bookingRepository.findByItem_Owner_IdAndStatusIs(
-                        ownerId, BookingStatus.REJECTED, SORT_BY_START_DESC);
+                        ownerId, BookingStatus.REJECTED, pageRequest);
                 break;
             default:
                 throw new InvalidStatusException("Неподдерживаемый BookingState: " + state.name());

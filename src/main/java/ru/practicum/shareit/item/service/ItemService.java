@@ -9,7 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.Collection;
 
 public interface ItemService {
-    Collection<ItemResponseDto> getUserItems(Long userId);
+    Collection<ItemResponseDto> getUserItems(Long userId, Integer from, Integer size);
 
     ItemResponseDto getItemById(Long itemId, Long userId);
 
@@ -17,7 +17,7 @@ public interface ItemService {
 
     ItemResponseDto updateItem(Long userId, Item item, Long itemId);
 
-    Collection<ItemResponseDto> searchItem(String text);
+    Collection<ItemResponseDto> searchItem(String text, Integer from, Integer size);
 
     CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long itemId, Long userId);
 }

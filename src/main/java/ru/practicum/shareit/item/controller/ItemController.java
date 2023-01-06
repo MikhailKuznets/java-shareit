@@ -35,7 +35,7 @@ public class ItemController {
         log.info("Получен запрос GET /items . От пользователя id = {} на просмотр собственных предметов. " +
                         "Отображать по {} предметов на странице, начиная с itemId = {}.",
                 userId, size, from);
-        return new ResponseEntity<>(itemService.getUserItems(userId), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.getUserItems(userId, from, size), HttpStatus.OK);
     }
 
     @GetMapping("/{itemId}")
@@ -55,7 +55,7 @@ public class ItemController {
         log.info("Получен запрос GET /items/search?text={} . От пользователя id = {} на поиск предмета: {}" +
                         "Отображать по {} предметов на странице, начиная с itemId = {}.",
                 text, userId, text, size, from);
-        return new ResponseEntity<>(itemService.searchItem(text), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.searchItem(text, from, size), HttpStatus.OK);
     }
 
     @PostMapping

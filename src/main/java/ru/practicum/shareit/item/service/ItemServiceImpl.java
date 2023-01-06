@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -44,8 +46,9 @@ public class ItemServiceImpl implements ItemService {
     private final CommentMapper commentMapper;
 
     @Override
-    public Collection<ItemResponseDto> getUserItems(Long userId) {
-        Collection<Item> userItems = itemRepository.findAllByOwner_IdOrderByIdAsc(userId);
+    public Collection<ItemResponseDto> getUserItems(Long userId, Integer from, Integer size) {
+        PageRequest pageRequest = PageRequest.of(from, size);
+        Page<Item> userItems = itemRepository.findAllByOwner_IdOrderByIdAsc(userId, pageRequest);
         Collection<ItemResponseDto> userItemsDto = userItems.stream()
                 .map(itemMapper::toItemResponseDto)
                 .map(this::setBookings)
@@ -115,13 +118,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemResponseDto> searchItem(String text) {
+    public Collection<ItemResponseDto> searchItem(String text, Integer from, Integer size) {
         if (text.isBlank()) {
             log.warn("Задан пустой поисковый запрос.");
             return Collections.emptyList();
         }
         String lowerText = text.toLowerCase();
-        Collection<Item> items = itemRepository.searchItemByText(lowerText);
+        PageRequest pageRequest = PageRequest.of(from, size);
+        Page<Item> items = itemRepository.searchItemByText(lowerText, pageRequest);
         return items.stream().map(itemMapper::toItemResponseDto).collect(Collectors.toList());
     }
 

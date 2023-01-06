@@ -1,7 +1,7 @@
 package ru.practicum.shareit.request.repository;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shareit.exceptions.InvalidIdException;
@@ -18,5 +18,5 @@ public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> 
 
     Collection<ItemRequest> findByRequesterId(Long userId, Sort sort);
 
-    Page<ItemRequest> findByRequesterIdIsNot(Long userId, PageRequest pageRequest);
+    Page<ItemRequest> findByRequesterIdIsNot(Long userId, Pageable pageable);
 }
