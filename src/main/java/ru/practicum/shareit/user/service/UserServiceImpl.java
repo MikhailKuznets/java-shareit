@@ -2,7 +2,6 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exceptions.InvalidIdException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -27,10 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findUserById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new InvalidIdException("К сожалению, пользователя с id " + userId + " нет");
-        });
-        return userMapper.toUserDto(user);
+        return userMapper.toUserDto(userRepository.validateUser(userId));
     }
 
     @Override
@@ -41,9 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(Long userId, User user) {
-        User selectedUser = userRepository.findById(userId).orElseThrow(() -> {
-            throw new InvalidIdException("К сожалению, пользователя с id " + userId + " нет");
-        });
+        User selectedUser = userRepository.validateUser(userId);
 
         String updatedName = user.getName();
         if (updatedName != null) {
@@ -61,9 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long userId) {
-        userRepository.findById(userId).orElseThrow(() -> {
-            throw new InvalidIdException("К сожалению, пользователя с id " + userId + " нет.");
-        });
+        userRepository.validateUser(userId);
         userRepository.deleteById(userId);
     }
 }
