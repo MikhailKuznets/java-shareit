@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.service;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,13 +29,13 @@ class UserServiceImplTest {
     @Mock
     private UserMapper userMapper;
 
-    private User requestUser1;
-    private User user1;
-    private UserDto responseUser1Dto;
+    private static User requestUser1;
+    private static User user1;
+    private static UserDto responseUser1Dto;
 
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         requestUser1 = User.builder()
                 .name("User1")
                 .email("user1@yandex.ru")

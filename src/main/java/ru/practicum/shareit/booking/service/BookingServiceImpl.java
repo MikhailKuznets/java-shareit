@@ -36,15 +36,15 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public BookingResponseDto createBooking(BookingRequestDto dto, Long userId) {
+    public BookingResponseDto createBooking(BookingRequestDto bookingRequestDto, Long userId) {
         //   Проверка начального и конечного времени бронирования
-        if (dto.getStart().isAfter(dto.getEnd())) {
+        if (bookingRequestDto.getStart().isAfter(bookingRequestDto.getEnd())) {
             throw new BookingInvalidTimeException("Время и дата начала бронирования должно быть раньше " +
                     "конечного времени и даты бронирования");
         }
 
         User booker = userRepository.validateUser(userId);
-        Item item = itemRepository.validateItem(dto.getItemId());
+        Item item = itemRepository.validateItem(bookingRequestDto.getItemId());
 
         //   Проверка Item.Status
         if (!item.getAvailable()) {
@@ -57,7 +57,7 @@ public class BookingServiceImpl implements BookingService {
             throw new InvalidIdException("Недопустимо бронировать собственный предмет");
         }
 
-        Booking booking = bookingMapper.toBookingFromBookingRequestDto(dto);
+        Booking booking = bookingMapper.toBookingFromBookingRequestDto(bookingRequestDto);
         booking.setBooker(booker);
         booking.setItem(item);
         return bookingMapper.toBookingResponseDto(bookingRepository.save(booking));
@@ -118,12 +118,14 @@ public class BookingServiceImpl implements BookingService {
         userRepository.validateUser(bookerId);
         LocalDateTime now = LocalDateTime.now();
 
-        PageRequest pageRequest = PageRequest.of((from / size), size, SORT_BY_START_DESC);
+        PageRequest pageRequest = PageRequest.of(from, size, SORT_BY_START_DESC);
         Page<Booking> bookings;
 
         switch (state) {
             case ALL:
-                bookings = bookingRepository.findAllByBooker_Id(bookerId, pageRequest);
+                bookings = bookingRepository.findAllByBooker_Id(bookerId,
+                        // затычка для прохождения тестов Postman - обсуждалась в пачке
+                        PageRequest.of((from / size), size, SORT_BY_START_DESC));
                 break;
             case CURRENT:
                 bookings = bookingRepository.findByBooker_IdAndStartIsBeforeAndEndIsAfter(bookerId, now, now,

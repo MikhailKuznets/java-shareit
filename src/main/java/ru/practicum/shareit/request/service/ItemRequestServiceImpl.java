@@ -36,9 +36,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemMapper itemMapper;
 
     @Override
-    public ItemReqResponseDto createRequest(ItemReqRequestDto dto, Long userId) {
+    public ItemReqResponseDto createRequest(ItemReqRequestDto itemReqRequestDto, Long userId) {
         User user = userRepository.validateUser(userId);
-        ItemRequest itemRequest = itemRequestMapper.toItemRequest(dto);
+        ItemRequest itemRequest = itemRequestMapper.toItemRequest(itemReqRequestDto);
 
         LocalDateTime now = LocalDateTime.now();
 

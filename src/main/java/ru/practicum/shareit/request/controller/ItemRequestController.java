@@ -26,10 +26,10 @@ public class ItemRequestController {
     @PostMapping
     public ResponseEntity<ItemReqResponseDto> createRequest(@RequestHeader("X-Sharer-User-Id")
                                                             @Positive Long userId,
-                                                            @RequestBody @Valid ItemReqRequestDto dto) {
+                                                            @RequestBody @Valid ItemReqRequestDto itemReqRequestDto) {
         log.info("Получен запрос POST /requests . " +
-                "От пользователя с userId = {}. Создать запрос на добавление предмета: {}.", userId, dto);
-        return new ResponseEntity<>(itemRequestService.createRequest(dto, userId), HttpStatus.OK);
+                "От пользователя с userId = {}. Создать запрос на добавление предмета: {}.", userId, itemReqRequestDto);
+        return new ResponseEntity<>(itemRequestService.createRequest(itemReqRequestDto, userId), HttpStatus.OK);
     }
 
     @GetMapping

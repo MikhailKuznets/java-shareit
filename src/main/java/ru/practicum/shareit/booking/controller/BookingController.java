@@ -26,10 +26,10 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<BookingResponseDto> createBooking(@RequestHeader("X-Sharer-User-Id")
                                                             @Positive Long userId,
-                                                            @RequestBody @Valid BookingRequestDto dto) {
+                                                            @RequestBody @Valid BookingRequestDto bookingRequestDto) {
         log.info("Получен запрос POST /bookings . " +
-                "От пользователя с userId = {}. Создать бронирование: {}.", userId, dto);
-        return new ResponseEntity<>(bookingService.createBooking(dto, userId), HttpStatus.OK);
+                "От пользователя с userId = {}. Создать бронирование: {}.", userId, bookingRequestDto);
+        return new ResponseEntity<>(bookingService.createBooking(bookingRequestDto, userId), HttpStatus.OK);
     }
 
     @PatchMapping("/{bookingId}")

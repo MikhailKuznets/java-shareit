@@ -12,7 +12,7 @@ public enum BookingState {
     REJECTED,
     UNKNOWN;
 
-    // Вебинар
+    // Вебинар стринг -> BookingState
     public static BookingState of(String value) {
         return Arrays.stream(values())
                 .filter(item -> Objects.equals(value, item.name()))
