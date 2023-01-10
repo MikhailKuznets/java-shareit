@@ -55,7 +55,7 @@ class UserControllerUnitTest {
     @Test
     @DisplayName("Должен создать User при корректных данных")
     void shouldCreateCorrectUser() throws Exception {
-        when(userService.createUser(any())).thenReturn(responseUser1);
+        when(userService.createUser(any(User.class))).thenReturn(responseUser1);
 
         mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -65,6 +65,8 @@ class UserControllerUnitTest {
                 .andExpect(MockMvcResultMatchers.content().json(
                         objectMapper.writeValueAsString(responseUser1)
                 ));
+
+        verify(userService, times(1)).createUser(requestUser1);
     }
 
     @Test
@@ -129,7 +131,6 @@ class UserControllerUnitTest {
                 ));
 
         verify(userService, times(1)).findAllUsers();
-
     }
 
 }

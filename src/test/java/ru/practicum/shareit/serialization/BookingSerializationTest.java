@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import ru.practicum.shareit.TestUtility;
 import ru.practicum.shareit.booking.dto.BookingDtoForItems;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
-import ru.practicum.shareit.booking.model.BookingStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,13 +27,7 @@ class BookingSerializationTest {
     @Test
     @DisplayName("Проверка сериализации BookingDtoForItems")
     public void bookingDtoForItemsSerialisationTest() throws IOException {
-        BookingDtoForItems bookingDto = BookingDtoForItems.builder()
-                .id(1L)
-                .start(TestUtility.BOOKING_START_1)
-                .end(TestUtility.BOOKING_END_1)
-                .bookerId(1L)
-                .status(BookingStatus.APPROVED)
-                .build();
+        BookingDtoForItems bookingDto = TestUtility.getLastBookingDtoForItems();
         String resultString = objectMapper.writeValueAsString(bookingDto);
         System.out.println("Response JSON: \n" + resultString + "\n");
 
@@ -50,14 +43,8 @@ class BookingSerializationTest {
     @Test
     @DisplayName("Проверка сериализации BookingResponseDto")
     public void bookingResponseDtoSerialisationTest() throws IOException {
-        BookingResponseDto bookingDto = BookingResponseDto.builder()
-                .id(1L)
-                .start(TestUtility.BOOKING_START_1)
-                .end(TestUtility.BOOKING_END_1)
-                .item(TestUtility.getItemResponseDto())
-                .booker(TestUtility.getUserDto())
-                .status(BookingStatus.WAITING)
-                .build();
+        BookingResponseDto bookingDto = TestUtility.getLastBookingResponseDto();
+
         String resultString = objectMapper.writeValueAsString(bookingDto);
         System.out.println("Response JSON: \n" + resultString + "\n");
 

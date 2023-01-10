@@ -1,6 +1,8 @@
 package ru.practicum.shareit;
 
 import ru.practicum.shareit.booking.dto.BookingDtoForItems;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
@@ -23,7 +25,7 @@ public class TestUtility {
     public static final String FOLDER_PATH = "src" + SEPARATOR + "test" + SEPARATOR +
             "resources" + SEPARATOR + "serialization" + SEPARATOR;
 
-    // User 1 Dto
+    // //User 1 Dto
     public static final String USER_1_DTO_FILE_NAME = "user1_dto_test.json";
     public static final String USER_1_DTO_FILE_PATH = FOLDER_PATH + USER_1_DTO_FILE_NAME;
 
@@ -40,6 +42,7 @@ public class TestUtility {
     public static final String BOOKING_1_DTO_FILE_NAME = "booking1_dto_test.json";
     public static final String BOOKING_1_DTO_PATH = FOLDER_PATH + BOOKING_1_DTO_FILE_NAME;
 
+    // User
     public static User getUser() {
         return User.builder()
                 .id(1L)
@@ -56,9 +59,29 @@ public class TestUtility {
                 .build();
     }
 
+    // Booking
+    public static BookingRequestDto getLastBookingRequestDto() {
+        return BookingRequestDto.builder()
+                .itemId(1L)
+                .start(TestUtility.BOOKING_START_1)
+                .end(TestUtility.BOOKING_END_1)
+                .build();
+    }
+
+    public static BookingResponseDto getLastBookingResponseDto() {
+        return BookingResponseDto.builder()
+                .id(1L)
+                .start(TestUtility.BOOKING_START_1)
+                .end(TestUtility.BOOKING_END_1)
+                .item(TestUtility.getItemResponseDto())
+                .booker(TestUtility.getUserDto())
+                .status(BookingStatus.WAITING)
+                .build();
+    }
+
     public static BookingDtoForItems getLastBookingDtoForItems() {
         return BookingDtoForItems.builder()
-                .id(2L)
+                .id(1L)
                 .start(TestUtility.BOOKING_START_1)
                 .end(TestUtility.BOOKING_END_1)
                 .bookerId(1L)
@@ -66,16 +89,37 @@ public class TestUtility {
                 .build();
     }
 
+    public static BookingRequestDto getNextBookingRequestDto() {
+        return BookingRequestDto.builder()
+                .itemId(2L)
+                .start(TestUtility.BOOKING_START_1.plusMonths(1))
+                .end(TestUtility.BOOKING_END_1.plusMonths(1))
+                .build();
+    }
+
+    public static BookingResponseDto getNextBookingResponseDto() {
+        return BookingResponseDto.builder()
+                .id(2L)
+                .start(TestUtility.BOOKING_START_1.plusMonths(1))
+                .end(TestUtility.BOOKING_END_1.plusMonths(1))
+                .item(TestUtility.getItemResponseDto())
+                .booker(TestUtility.getUserDto())
+                .status(BookingStatus.WAITING)
+                .build();
+    }
+
     public static BookingDtoForItems getNextBookingDtoForItems() {
         return BookingDtoForItems.builder()
-                .id(3L)
-                .start(TestUtility.BOOKING_START_1.plusDays(2))
-                .end(TestUtility.BOOKING_END_1.plusDays(2))
+                .id(2L)
+                .start(TestUtility.BOOKING_START_1.plusMonths(1))
+                .end(TestUtility.BOOKING_END_1.plusMonths(1))
                 .bookerId(2L)
                 .status(BookingStatus.WAITING)
                 .build();
     }
 
+
+    // Comment
     public static CommentResponseDto getCommentResponseDto() {
         return CommentResponseDto.builder()
                 .id(1L)
@@ -85,6 +129,7 @@ public class TestUtility {
                 .build();
     }
 
+    // Item
     public static ItemResponseDto getItemResponseDto() {
         return ItemResponseDto.builder()
                 .id(1L)
