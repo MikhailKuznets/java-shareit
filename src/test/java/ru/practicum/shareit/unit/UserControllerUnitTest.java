@@ -124,9 +124,9 @@ class UserControllerUnitTest {
 
         when(userService.findAllUsers()).thenReturn(users);
 
-        mockMvc.perform(get("/users"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(
+        mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(
                         objectMapper.writeValueAsString(users)
                 ));
 

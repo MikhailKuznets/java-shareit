@@ -11,7 +11,6 @@ import ru.practicum.shareit.comment.dto.CommentRequestDto;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -52,7 +51,7 @@ public class ItemController {
             @RequestParam String text,
             @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
             @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
-        log.info("Получен запрос GET /items/search?text={} . От пользователя id = {} на поиск предмета: {}" +
+        log.info("Получен запрос GET /items/search?text={} . От пользователя id = {} на поиск предмета: {} ." +
                         "Отображать по {} предметов на странице, начиная с itemId = {}.",
                 text, userId, text, size, from);
         return new ResponseEntity<>(itemService.searchItem(text, from, size), HttpStatus.OK);
@@ -68,16 +67,19 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ResponseEntity<ItemResponseDto> updateItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
                                                       @PathVariable @Positive Long itemId,
-                                                      @RequestBody Item item) {
+                                                      @RequestBody ItemRequestDto itemDto) {
         log.info("Получен запрос Patch /items/{} . От пользователя id = {}, обновить данные вещи {}.",
-                itemId, userId, item);
-        return new ResponseEntity<>(itemService.updateItem(userId, item, itemId), HttpStatus.OK);
+                itemId, userId, itemDto);
+        return new ResponseEntity<>(itemService.updateItem(userId, itemDto, itemId), HttpStatus.OK);
     }
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<CommentResponseDto> createComment(@Valid @RequestBody CommentRequestDto commentRequestDto,
                                                             @PathVariable Long itemId,
                                                             @RequestHeader("X-Sharer-User-Id") Long userId) {
+        log.info("Получен запрос Post /items/{}/comment . От пользователя id = {}, добавить к вещи с id = {}. " +
+                        "Комментарий: {}",
+                itemId, userId, itemId, commentRequestDto);
         return new ResponseEntity<>(itemService.createComment(commentRequestDto, itemId, userId), HttpStatus.OK);
     }
 }

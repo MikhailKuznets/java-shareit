@@ -124,7 +124,7 @@ public class BookingServiceImpl implements BookingService {
         switch (state) {
             case ALL:
                 bookings = bookingRepository.findAllByBooker_Id(bookerId,
-                        // затычка для прохождения тестов Postman - обсуждалась в пачке
+                        // затычка для прохождения некорректных тестов Postman - обсуждалась в пачке
                         PageRequest.of((from / size), size, SORT_BY_START_DESC));
                 break;
             case CURRENT:

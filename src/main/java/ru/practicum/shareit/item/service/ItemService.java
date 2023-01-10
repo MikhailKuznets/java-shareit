@@ -15,7 +15,7 @@ public interface ItemService {
 
     ItemResponseDto createItem(ItemRequestDto itemRequestDto, Long userId);
 
-    ItemResponseDto updateItem(Long userId, Item item, Long itemId);
+    ItemResponseDto updateItem(Long userId, ItemRequestDto itemRequestDto, Long itemId);
 
     Collection<ItemResponseDto> searchItem(String text, Integer from, Integer size);
 

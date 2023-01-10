@@ -4,7 +4,9 @@ import ru.practicum.shareit.booking.dto.BookingDtoForItems;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.comment.dto.CommentRequestDto;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
+import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -25,7 +27,7 @@ public class TestUtility {
     public static final String FOLDER_PATH = "src" + SEPARATOR + "test" + SEPARATOR +
             "resources" + SEPARATOR + "serialization" + SEPARATOR;
 
-    // //User 1 Dto
+    // User 1 Dto
     public static final String USER_1_DTO_FILE_NAME = "user1_dto_test.json";
     public static final String USER_1_DTO_FILE_PATH = FOLDER_PATH + USER_1_DTO_FILE_NAME;
 
@@ -120,6 +122,12 @@ public class TestUtility {
 
 
     // Comment
+    public static CommentRequestDto getCommentRequestDto() {
+        return CommentRequestDto.builder()
+                .text("Мой комментарий")
+                .build();
+    }
+
     public static CommentResponseDto getCommentResponseDto() {
         return CommentResponseDto.builder()
                 .id(1L)
@@ -130,6 +138,15 @@ public class TestUtility {
     }
 
     // Item
+    public static ItemRequestDto getItemRequestDto() {
+        return ItemRequestDto.builder()
+                .name("Дрель")
+                .description("Чтобы доставать соседей")
+                .available(true)
+                .requestId(1L)
+                .build();
+    }
+
     public static ItemResponseDto getItemResponseDto() {
         return ItemResponseDto.builder()
                 .id(1L)

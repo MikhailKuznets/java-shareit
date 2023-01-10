@@ -88,8 +88,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponseDto updateItem(Long userId, Item item, Long itemId) {
-        User owner = userRepository.validateUser(userId);
+    public ItemResponseDto updateItem(Long userId, ItemRequestDto itemDto, Long itemId) {
+        userRepository.validateUser(userId);
 
         Item selectedItem = itemRepository.validateItem(itemId);
 
@@ -100,17 +100,17 @@ public class ItemServiceImpl implements ItemService {
                     " с id = " + userId);
         }
 
-        String updatedName = item.getName();
+        String updatedName = itemDto.getName();
         if (updatedName != null) {
             selectedItem.setName(updatedName);
         }
 
-        String updatedDescription = item.getDescription();
+        String updatedDescription = itemDto.getDescription();
         if (updatedDescription != null) {
             selectedItem.setDescription(updatedDescription);
         }
 
-        Boolean updatedAvailable = item.getAvailable();
+        Boolean updatedAvailable = itemDto.getAvailable();
         if (updatedAvailable != null) {
             selectedItem.setAvailable(updatedAvailable);
         }
