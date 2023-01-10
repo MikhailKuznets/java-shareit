@@ -8,13 +8,13 @@ import ru.practicum.shareit.comment.dto.CommentRequestDto;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
+import ru.practicum.shareit.request.dto.ItemReqRequestDto;
 import ru.practicum.shareit.request.dto.ItemReqResponseDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 public class TestUtility {
@@ -168,6 +168,12 @@ public class TestUtility {
     }
 
     // Request
+    public static ItemReqRequestDto getItemReqRequestDto() {
+        return ItemReqRequestDto.builder()
+                .description("Нужна дрель")
+                .build();
+    }
+
     public static ItemReqResponseDto getItemReqResponseDto() {
         return ItemReqResponseDto.builder()
                 .id(1L)
