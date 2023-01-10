@@ -8,11 +8,13 @@ import ru.practicum.shareit.comment.dto.CommentRequestDto;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
+import ru.practicum.shareit.request.dto.ItemReqResponseDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public class TestUtility {
@@ -21,6 +23,7 @@ public class TestUtility {
             LocalDateTime.of(2023, 1, 9, 10, 10, 10);
     public static final LocalDateTime BOOKING_END_1 = BOOKING_START_1.plusDays(1);
     public static final LocalDateTime COMMENT_TIME = BOOKING_END_1.plusHours(1);
+    public static final LocalDateTime REQUEST_TIME = BOOKING_START_1.minusDays(1);
 
     // Установка пути к тестовым JSON файлам
     public static final String SEPARATOR = File.separator;
@@ -43,6 +46,10 @@ public class TestUtility {
     // Booking 1 Dto
     public static final String BOOKING_1_DTO_FILE_NAME = "booking1_dto_test.json";
     public static final String BOOKING_1_DTO_PATH = FOLDER_PATH + BOOKING_1_DTO_FILE_NAME;
+
+    // Booking 1 Dto
+    public static final String REQUEST_1_DTO_FILE_NAME = "request1_dto_test.json";
+    public static final String REQUEST_1_DTO_PATH = FOLDER_PATH + REQUEST_1_DTO_FILE_NAME;
 
     // User
     public static User getUser() {
@@ -159,4 +166,15 @@ public class TestUtility {
                 .requestId(1L)
                 .build();
     }
+
+    // Request
+    public static ItemReqResponseDto getItemReqResponseDto() {
+        return ItemReqResponseDto.builder()
+                .id(1L)
+                .description("Нужна дрель")
+                .created(REQUEST_TIME)
+                .items(List.of(getItemResponseDto()))
+                .build();
+    }
+
 }
