@@ -1,4 +1,4 @@
-package ru.practicum.shareit.unit;
+package ru.practicum.shareit.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc
 @WebMvcTest({ItemController.class})
-class ItemControllerUnitTest {
+class ItemControllerRestTest {
     private static final String PATH = "/items";
     private static final String PATH_WITH_ID = "/items/1";
     public static final String X_SHADER_USER_ID = "X-Sharer-User-Id";

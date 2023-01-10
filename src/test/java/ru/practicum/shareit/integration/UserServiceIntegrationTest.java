@@ -1,47 +1,57 @@
 package ru.practicum.shareit.integration;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.service.UserServiceImpl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class IntegrationUserTest {
-    private static User requestUser1;
-    private static User user1;
-    private static UserDto responseUser1Dto;
-
-    @Autowired
-    private UserService userService;
+//Вебинар
+//@SpringBootTest
+//@AutoConfigureMockMvc
+public class UserServiceIntegrationTest {
+    private UserRepository userRepository;
+    private UserMapper userMapper;
+    private UserServiceImpl userService;
 
 
-    @BeforeAll
-    static void setUp() {
-        requestUser1 = User.builder()
-                .name("User1")
-                .email("user1@yandex.ru")
-                .build();
+//    private static User requestUser1;
+//    private static User user1;
+//    private static UserDto responseUser1Dto;
 
-        user1 = User.builder()
-                .id(1L)
-                .name("User1")
-                .email("user1@yandex.ru")
-                .build();
+//    @Autowired
+//    private UserService userService;
 
-        responseUser1Dto = UserDto.builder()
-                .id(1L)
-                .name("User1")
-                .email("user1@yandex.ru")
-                .build();
+
+    @BeforeEach
+    void setUp() {
+        userRepository = mock(UserRepository.class);
+        userMapper = mock
+
+    }
+
+
+//        requestUser1 = User.builder()
+//                .name("User1")
+//                .email("user1@yandex.ru")
+//                .build();
+//
+//        user1 = User.builder()
+//                .id(1L)
+//                .name("User1")
+//                .email("user1@yandex.ru")
+//                .build();
+//
+//        responseUser1Dto = UserDto.builder()
+//                .id(1L)
+//                .name("User1")
+//                .email("user1@yandex.ru")
+//                .build();
 
 //        requestUser2 = User.builder()
 //                .name("User2")
@@ -71,7 +81,7 @@ public class IntegrationUserTest {
 //                .name("Updated User1")
 //                .email("updateduser1@yandex.ru")
 //                .build();
-    }
+//    }
 
     @Test
     @DisplayName("Должен создать User при корректных данных пользователя")
