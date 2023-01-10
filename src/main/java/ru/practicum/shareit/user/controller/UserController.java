@@ -49,7 +49,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUserById(@PathVariable @Positive Long userId) {
-        log.info("Получен запрос Delete /users/{} . Удалить пользователя по userId {}.", userId, userId);
+        log.info("Получен запрос Delete /users/{} . Удалить пользователя имеющего userId {}.", userId, userId);
         userService.deleteUserById(userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

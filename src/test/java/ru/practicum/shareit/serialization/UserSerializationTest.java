@@ -5,13 +5,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
+import ru.practicum.shareit.TestUtility;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.io.File;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.practicum.shareit.serialization.SerializationTestConstant.USER_1_DTO_FILE_PATH;
+import static ru.practicum.shareit.TestUtility.USER_1_DTO_FILE_PATH;
 
 @JsonTest
 public class UserSerializationTest {
@@ -23,7 +24,7 @@ public class UserSerializationTest {
     @Test
     @DisplayName("Проверка сериализации UserDto")
     public void userDtoSerialisationTest() throws IOException {
-        UserDto userDto = SerializationTestConstant.USER_1_DTO;
+        UserDto userDto = TestUtility.getUserDto();
 
         String resultString = objectMapper.writeValueAsString(userDto);
         System.out.println("Response JSON: \n" + resultString + "\n");

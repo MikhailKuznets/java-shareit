@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.controller;
+package ru.practicum.shareit.booking;
 
 import java.util.Arrays;
 import java.util.Objects;

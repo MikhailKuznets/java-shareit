@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
+import ru.practicum.shareit.TestUtility;
 import ru.practicum.shareit.booking.dto.BookingDtoForItems;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -13,8 +14,8 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.practicum.shareit.serialization.SerializationTestConstant.BOOKING_1_DTO_FOR_ITEMS_FILE_PATH;
-import static ru.practicum.shareit.serialization.SerializationTestConstant.BOOKING_1_DTO_PATH;
+import static ru.practicum.shareit.TestUtility.BOOKING_1_DTO_FOR_ITEMS_FILE_PATH;
+import static ru.practicum.shareit.TestUtility.BOOKING_1_DTO_PATH;
 
 @JsonTest
 class BookingSerializationTest {
@@ -29,8 +30,8 @@ class BookingSerializationTest {
     public void bookingDtoForItemsSerialisationTest() throws IOException {
         BookingDtoForItems bookingDto = BookingDtoForItems.builder()
                 .id(1L)
-                .start(SerializationTestConstant.BOOKING_START_1)
-                .end(SerializationTestConstant.BOOKING_END_1)
+                .start(TestUtility.BOOKING_START_1)
+                .end(TestUtility.BOOKING_END_1)
                 .bookerId(1L)
                 .status(BookingStatus.APPROVED)
                 .build();
@@ -51,10 +52,10 @@ class BookingSerializationTest {
     public void bookingResponseDtoSerialisationTest() throws IOException {
         BookingResponseDto bookingDto = BookingResponseDto.builder()
                 .id(1L)
-                .start(SerializationTestConstant.BOOKING_START_1)
-                .end(SerializationTestConstant.BOOKING_END_1)
-                .item(SerializationTestConstant.ITEM_1_RESPONSE_DTO)
-                .booker(SerializationTestConstant.USER_1_DTO)
+                .start(TestUtility.BOOKING_START_1)
+                .end(TestUtility.BOOKING_END_1)
+                .item(TestUtility.getItemResponseDto())
+                .booker(TestUtility.getUserDto())
                 .status(BookingStatus.WAITING)
                 .build();
         String resultString = objectMapper.writeValueAsString(bookingDto);
