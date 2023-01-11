@@ -4,14 +4,14 @@
   "description": "Чтобы доставать соседей",
   "available": true,
   "lastBooking": {
-    "id": 1,
+    "id": 2,
     "start": "2023-01-09T10:10:10",
     "end": "2023-01-10T10:10:10",
-    "bookerId": 1,
+    "bookerId": 3,
     "status": "APPROVED"
   },
   "nextBooking": {
-    "id": 2,
+    "id": 1,
     "start": "2023-02-09T10:10:10",
     "end": "2023-02-10T10:10:10",
     "bookerId": 2,
@@ -25,5 +25,5 @@
       "created": "2023-01-10T11:10:10"
     }
   ],
-  "requestId": 1
+  "requestId": null
 }

@@ -19,11 +19,16 @@ import java.util.List;
 
 public class TestUtility {
     // Установки даты и времени
-    public static final LocalDateTime BOOKING_START_1 =
+    public static final LocalDateTime LAST_BOOKING_START =
             LocalDateTime.of(2023, 1, 9, 10, 10, 10);
-    public static final LocalDateTime BOOKING_END_1 = BOOKING_START_1.plusDays(1);
-    public static final LocalDateTime COMMENT_TIME = BOOKING_END_1.plusHours(1);
-    public static final LocalDateTime REQUEST_TIME = BOOKING_START_1.minusDays(1);
+    public static final LocalDateTime LAST_BOOKING_END = LAST_BOOKING_START.plusDays(1);
+
+    public static final LocalDateTime NEXT_BOOKING_START = LAST_BOOKING_START.plusMonths(1);
+    public static final LocalDateTime NEXT_BOOKING_END = LAST_BOOKING_END.plusMonths(1);
+
+
+    public static final LocalDateTime COMMENT_TIME = LAST_BOOKING_END.plusHours(1);
+    public static final LocalDateTime REQUEST_TIME = LAST_BOOKING_START.minusDays(1);
 
     // Установка пути к тестовым JSON файлам
     public static final String SEPARATOR = File.separator;
@@ -50,6 +55,10 @@ public class TestUtility {
     // Booking 1 Dto
     public static final String REQUEST_1_DTO_FILE_NAME = "request1_dto_test.json";
     public static final String REQUEST_1_DTO_PATH = FOLDER_PATH + REQUEST_1_DTO_FILE_NAME;
+
+    private static final Long BOOKER_1_ID = 2L;
+    private static final Long BOOKER_2_ID = 3L;
+
 
     // User
     public static User getUser1() {
@@ -87,17 +96,17 @@ public class TestUtility {
     // Booking
     public static BookingRequestDto getLastBookingRequestDto() {
         return BookingRequestDto.builder()
-                .itemId(1L)
-                .start(TestUtility.BOOKING_START_1)
-                .end(TestUtility.BOOKING_END_1)
+                .itemId(2L)
+                .start(TestUtility.LAST_BOOKING_START)
+                .end(TestUtility.LAST_BOOKING_END)
                 .build();
     }
 
     public static BookingResponseDto getLastBookingResponseDto() {
         return BookingResponseDto.builder()
-                .id(1L)
-                .start(TestUtility.BOOKING_START_1)
-                .end(TestUtility.BOOKING_END_1)
+                .id(2L)
+                .start(TestUtility.LAST_BOOKING_START)
+                .end(TestUtility.LAST_BOOKING_END)
                 .item(TestUtility.getItemResponseDto())
                 .booker(TestUtility.getUser1Dto())
                 .status(BookingStatus.WAITING)
@@ -106,27 +115,27 @@ public class TestUtility {
 
     public static BookingDtoForItems getLastBookingDtoForItems() {
         return BookingDtoForItems.builder()
-                .id(1L)
-                .start(TestUtility.BOOKING_START_1)
-                .end(TestUtility.BOOKING_END_1)
-                .bookerId(1L)
+                .id(2L)
+                .start(TestUtility.LAST_BOOKING_START)
+                .end(TestUtility.LAST_BOOKING_END)
+                .bookerId(BOOKER_2_ID)
                 .status(BookingStatus.APPROVED)
                 .build();
     }
 
     public static BookingRequestDto getNextBookingRequestDto() {
         return BookingRequestDto.builder()
-                .itemId(2L)
-                .start(TestUtility.BOOKING_START_1.plusMonths(1))
-                .end(TestUtility.BOOKING_END_1.plusMonths(1))
+                .itemId(1L)
+                .start(NEXT_BOOKING_START)
+                .end(NEXT_BOOKING_END)
                 .build();
     }
 
     public static BookingResponseDto getNextBookingResponseDto() {
         return BookingResponseDto.builder()
-                .id(2L)
-                .start(TestUtility.BOOKING_START_1.plusMonths(1))
-                .end(TestUtility.BOOKING_END_1.plusMonths(1))
+                .id(1L)
+                .start(NEXT_BOOKING_START)
+                .end(NEXT_BOOKING_END)
                 .item(TestUtility.getItemResponseDto())
                 .booker(TestUtility.getUser1Dto())
                 .status(BookingStatus.WAITING)
@@ -135,10 +144,10 @@ public class TestUtility {
 
     public static BookingDtoForItems getNextBookingDtoForItems() {
         return BookingDtoForItems.builder()
-                .id(2L)
-                .start(TestUtility.BOOKING_START_1.plusMonths(1))
-                .end(TestUtility.BOOKING_END_1.plusMonths(1))
-                .bookerId(2L)
+                .id(1L)
+                .start(NEXT_BOOKING_START)
+                .end(NEXT_BOOKING_END)
+                .bookerId(BOOKER_1_ID)
                 .status(BookingStatus.WAITING)
                 .build();
     }
@@ -166,7 +175,7 @@ public class TestUtility {
                 .name("Дрель")
                 .description("Чтобы доставать соседей")
                 .available(true)
-                .requestId(1L)
+                .requestId(null)
                 .build();
     }
 
@@ -179,7 +188,7 @@ public class TestUtility {
                 .lastBooking(getLastBookingDtoForItems())
                 .nextBooking(getNextBookingDtoForItems())
                 .comments(List.of(getCommentResponseDto()))
-                .requestId(1L)
+                .requestId(null)
                 .build();
     }
 
