@@ -24,7 +24,7 @@ public class UserSerializationTest {
     @Test
     @DisplayName("Проверка сериализации UserDto")
     public void userDtoSerialisationTest() throws IOException {
-        UserDto userDto = TestUtility.getUserDto();
+        UserDto userDto = TestUtility.getUser1Dto();
 
         String resultString = objectMapper.writeValueAsString(userDto);
         System.out.println("Response JSON: \n" + resultString + "\n");

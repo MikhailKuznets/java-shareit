@@ -52,7 +52,7 @@ public class TestUtility {
     public static final String REQUEST_1_DTO_PATH = FOLDER_PATH + REQUEST_1_DTO_FILE_NAME;
 
     // User
-    public static User getUser() {
+    public static User getUser1() {
         return User.builder()
                 .id(1L)
                 .email("user1@yandex.ru")
@@ -60,11 +60,27 @@ public class TestUtility {
                 .build();
     }
 
-    public static UserDto getUserDto() {
+    public static User getUser2() {
+        return User.builder()
+                .id(2L)
+                .email("user2@yandex.ru")
+                .name("User2")
+                .build();
+    }
+
+    public static UserDto getUser1Dto() {
         return UserDto.builder()
                 .id(1L)
                 .email("user1@yandex.ru")
                 .name("User1")
+                .build();
+    }
+
+    public static UserDto getUser2Dto() {
+        return UserDto.builder()
+                .id(2L)
+                .email("user2@yandex.ru")
+                .name("User2")
                 .build();
     }
 
@@ -83,7 +99,7 @@ public class TestUtility {
                 .start(TestUtility.BOOKING_START_1)
                 .end(TestUtility.BOOKING_END_1)
                 .item(TestUtility.getItemResponseDto())
-                .booker(TestUtility.getUserDto())
+                .booker(TestUtility.getUser1Dto())
                 .status(BookingStatus.WAITING)
                 .build();
     }
@@ -112,7 +128,7 @@ public class TestUtility {
                 .start(TestUtility.BOOKING_START_1.plusMonths(1))
                 .end(TestUtility.BOOKING_END_1.plusMonths(1))
                 .item(TestUtility.getItemResponseDto())
-                .booker(TestUtility.getUserDto())
+                .booker(TestUtility.getUser1Dto())
                 .status(BookingStatus.WAITING)
                 .build();
     }

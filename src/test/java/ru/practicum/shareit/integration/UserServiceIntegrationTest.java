@@ -3,100 +3,149 @@ package ru.practicum.shareit.integration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import ru.practicum.shareit.TestUtility;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
-import static org.mockito.Mockito.mock;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-//Вебинар
-//@SpringBootTest
-//@AutoConfigureMockMvc
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@SpringBootTest()
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+
 public class UserServiceIntegrationTest {
-    private UserRepository userRepository;
-    private UserMapper userMapper;
+    @Autowired
     private UserServiceImpl userService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserMapper userMapper;
 
 
-//    private static User requestUser1;
-//    private static User user1;
-//    private static UserDto responseUser1Dto;
-
-//    @Autowired
-//    private UserService userService;
+    private User requestUser1;
+    private User requestUser2;
+    private UserDto savedUser1;
+    private UserDto expectResponseUser1;
+    private UserDto expectResponseUser2;
+    private Collection<UserDto> expectResponseUsers;
+    private UserDto responseUser;
+    private Collection<UserDto> responseUsers;
 
 
     @BeforeEach
     void setUp() {
-        userRepository = mock(UserRepository.class);
-        userMapper = mock
+        requestUser1 = TestUtility.getUser1();
+        requestUser2 = TestUtility.getUser2();
 
+        expectResponseUser1 = TestUtility.getUser1Dto();
+        expectResponseUser2 = TestUtility.getUser2Dto();
+
+        assertNotNull(requestUser1);
+        assertNotNull(requestUser2);
+        assertNotNull(expectResponseUser1);
+        assertNotNull(expectResponseUser2);
     }
 
-
-//        requestUser1 = User.builder()
-//                .name("User1")
-//                .email("user1@yandex.ru")
-//                .build();
-//
-//        user1 = User.builder()
-//                .id(1L)
-//                .name("User1")
-//                .email("user1@yandex.ru")
-//                .build();
-//
-//        responseUser1Dto = UserDto.builder()
-//                .id(1L)
-//                .name("User1")
-//                .email("user1@yandex.ru")
-//                .build();
-
-//        requestUser2 = User.builder()
-//                .name("User2")
-//                .email("user2@yandex.ru")
-//                .build();
-//
-//        user2 = User.builder()
-//                .id(2L)
-//                .name("User2")
-//                .email("user2@yandex.ru")
-//                .build();
-//
-//        responseUser2Dto = UserDto.builder()
-//                .id(2L)
-//                .name("User2")
-//                .email("user2@yandex.ru")
-//                .build();
-//
-//        requestUpdatedUser1 = User.builder()
-//                .name("Updated User1")
-//                .email("updateduser1@yandex.ru")
-//                .build();
-//
-//
-//        responseUpdatedUser1Dto = UserDto.builder()
-//                .id(1L)
-//                .name("Updated User1")
-//                .email("updateduser1@yandex.ru")
-//                .build();
-//    }
-
     @Test
-    @DisplayName("Должен создать User при корректных данных пользователя")
+    @DisplayName("Должен создать и вернуть User при корректных данных пользователя")
     void shouldCreateCorrectUser() {
-        UserDto resultUserDto = userService.createUser(requestUser1);
-        assertEquals(responseUser1Dto, resultUserDto);
+        responseUser = userService.createUser(requestUser1);
+        assertNotNull(responseUser);
+        assertEquals(expectResponseUser1, responseUser);
     }
 
     @Test
-    @DisplayName("Не должен создать User при некорректном email")
-    void shouldNotCreateCorrectUserWithInvalidEmail() {
-        UserDto resultUserDto = userService.createUser(requestUser1);
-        assertEquals(responseUser1Dto, resultUserDto);
+    @DisplayName("Должен найти и вернуть User при корректнму useId")
+    void shouldFindUserByCorrectId() {
+        responseUser = userService.createUser(requestUser1);
+        assertNotNull(responseUser);
+        assertEquals(expectResponseUser1, responseUser);
+
+        responseUser = userService.findUserById(1L);
+        assertNotNull(responseUser);
+        assertEquals(expectResponseUser1, responseUser);
     }
 
+    @Test
+    @DisplayName("Должен вернуть список User'ов")
+    void shouldFindAllUsers() {
+        responseUsers = userService.findAllUsers();
+        assertNotNull(responseUsers);
+        assertEquals(0, responseUsers.size());
+
+        responseUser = userService.createUser(requestUser1);
+        assertNotNull(responseUser);
+        assertEquals(expectResponseUser1, responseUser);
+
+        expectResponseUsers = List.of(expectResponseUser1);
+        responseUsers = userService.findAllUsers();
+        assertNotNull(responseUsers);
+        assertEquals(1, responseUsers.size());
+        assertEquals(expectResponseUsers, responseUsers);
+    }
+
+    @Test
+    @DisplayName("Должен обновить и вернуть User при корректных данных пользователя")
+    void shouldUpdateCorrectUser() {
+        responseUser = userService.createUser(requestUser1);
+        assertNotNull(responseUser);
+        assertEquals(expectResponseUser1, responseUser);
+
+        User updateUser = User.builder()
+                .name("Updated User1 Name")
+                .email("updateduser1@yandex.ru")
+                .build();
+
+        UserDto responseUpdateUser = UserDto.builder()
+                .id(1L)
+                .name("Updated User1 Name")
+                .email("updateduser1@yandex.ru")
+                .build();
+
+        responseUser = userService.updateUser(1L, updateUser);
+        assertNotNull(responseUpdateUser);
+
+        responseUser = userService.findUserById(1L);
+        assertNotNull(responseUser);
+        assertEquals(responseUpdateUser, responseUser);
+
+        expectResponseUsers = List.of(responseUpdateUser);
+        responseUsers = userService.findAllUsers();
+        assertNotNull(responseUsers);
+        assertEquals(1, responseUsers.size());
+        assertEquals(expectResponseUsers, responseUsers);
+
+    }
+
+    @Test
+    @DisplayName("Должен удалить User при корректных данных пользователя")
+    void shouldDeleteCorrectUser() {
+        responseUser = userService.createUser(requestUser1);
+        assertNotNull(responseUser);
+        assertEquals(expectResponseUser1, responseUser);
+
+        expectResponseUsers = List.of(responseUser);
+        responseUsers = userService.findAllUsers();
+        assertNotNull(responseUsers);
+        assertEquals(1, responseUsers.size());
+        assertEquals(expectResponseUsers, responseUsers);
+
+        userService.deleteUserById(1L);
+
+        responseUsers = userService.findAllUsers();
+        assertEquals(0, responseUsers.size());
+        assertEquals(Collections.EMPTY_LIST, responseUsers);
+    }
 
 }
 

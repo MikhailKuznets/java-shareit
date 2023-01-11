@@ -21,7 +21,6 @@ import ru.practicum.shareit.user.service.UserService;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 //Вебинар
 @AutoConfigureMockMvc
@@ -40,13 +39,14 @@ class UserControllerRestTest {
 
     private User requestUser1;
     private UserDto responseUser1;
+    private UserDto responseUser2;
 
 
     @BeforeEach
     void setUp() {
-        requestUser1 = TestUtility.getUser();
-
-        responseUser1 = TestUtility.getUserDto();
+        requestUser1 = TestUtility.getUser1();
+        responseUser1 = TestUtility.getUser1Dto();
+        responseUser2 = TestUtility.getUser2Dto();
     }
 
 
@@ -112,12 +112,6 @@ class UserControllerRestTest {
     @Test
     @DisplayName("Должен вернуть список User'ов")
     void shouldFindAllUsers() throws Exception {
-        UserDto responseUser2 = UserDto.builder()
-                .id(2L)
-                .name("User2")
-                .email("user2@yandex.ru")
-                .build();
-
         List<UserDto> users = List.of(responseUser1, responseUser2);
 
         when(userService.findAllUsers()).thenReturn(users);
