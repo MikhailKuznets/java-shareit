@@ -25,15 +25,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest()
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ItemRequestServiceIntegrationTest {
+    private static final Long REQUEST_ID = 1L;
+    private static final Long OWNER_ID = 1L;
+    private static final Long REQUESTER_ID = 2L;
+    private static final String DESCRIPTION = "Нужна дрель";
+
     @Autowired
     ItemRequestService requestService;
     @Autowired
     UserService userService;
-    private final static Long REQUEST_ID = 1L;
-    private final static Long OWNER_ID = 1L;
-    private final static Long REQUESTER_ID = 2L;
-    private final static String DESCRIPTION = "Нужна дрель";
-
     private ItemReqRequestDto requestItemRequest;
     private ItemReqResponseDto responseItemRequest;
     private List<ItemReqResponseDto> requests;

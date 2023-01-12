@@ -30,16 +30,16 @@ import static ru.practicum.shareit.TestUtility.NEXT_BOOKING_START;
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class BookingServiceIntegrationTest {
+    private static final Long OWNER_ID = 1L;
+    private static final Long BOOKER_ID = 2L;
+    private static final Long BOOKING_ID = 1L;
+
     @Autowired
     private BookingServiceImpl bookingService;
     @Autowired
     private UserServiceImpl userService;
     @Autowired
     private ItemServiceImpl itemService;
-
-    private final static Long OWNER_ID = 1L;
-    private final static Long BOOKER_ID = 2L;
-    private final static Long BOOKING_ID = 1L;
 
     // Booking
     private BookingRequestDto requestBooking;

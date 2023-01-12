@@ -24,7 +24,7 @@ public class ItemRequestSerializationTest {
 
     @Test
     @DisplayName("Проверка сериализации ItemReqResponseDto")
-    public void ItemReqResponseDtoSerialisationTest() throws IOException {
+    public void itemReqResponseDtoSerializationTest() throws IOException {
         ItemReqResponseDto requestDto = TestUtility.getItemReqResponseDto();
 
         String resultString = objectMapper.writeValueAsString(requestDto);

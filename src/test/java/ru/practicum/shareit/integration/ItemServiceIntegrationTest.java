@@ -30,6 +30,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest()
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ItemServiceIntegrationTest {
+    private static final Long OWNER_ID = 1L;
+    private static final Long BOOKER_ID = 2L;
+    private static final Long ITEM_ID = 1L;
+    private static final Long COMMENT_ID = 1L;
+    private static final Long BOOKING_ID = 1L;
+
     @Autowired
     private ItemServiceImpl itemService;
     @Autowired
@@ -37,13 +43,6 @@ class ItemServiceIntegrationTest {
 
     @Autowired
     private BookingServiceImpl bookingService;
-
-    private final static Long OWNER_ID = 1L;
-    private final static Long BOOKER_ID = 2L;
-    private final static Long ITEM_ID = 1L;
-    private final static Long COMMENT_ID = 1L;
-    private final static Long BOOKING_ID = 1L;
-
 
     private ItemRequestDto requestItem;
     private ItemResponseDto item;
