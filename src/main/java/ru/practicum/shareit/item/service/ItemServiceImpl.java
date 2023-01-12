@@ -46,9 +46,9 @@ public class ItemServiceImpl implements ItemService {
     private final CommentMapper commentMapper;
 
     @Override
-    public Collection<ItemResponseDto> getUserItems(Long userId, Integer from, Integer size) {
+    public Collection<ItemResponseDto> getUserItems(Long ownerId, Integer from, Integer size) {
         PageRequest pageRequest = PageRequest.of(from, size);
-        Page<Item> userItems = itemRepository.findAllByOwner_IdOrderByIdAsc(userId, pageRequest);
+        Page<Item> userItems = itemRepository.findAllByOwner_IdOrderByIdAsc(ownerId, pageRequest);
         Collection<ItemResponseDto> userItemsDto = userItems.stream()
                 .map(itemMapper::toItemResponseDto)
                 .map(this::setBookings)
@@ -72,8 +72,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponseDto createItem(ItemRequestDto itemDto, Long userId) {
-        User owner = userRepository.validateUser(userId);
+    public ItemResponseDto createItem(ItemRequestDto itemDto, Long ownerId) {
+        User owner = userRepository.validateUser(ownerId);
 
         Item item = itemMapper.toItem(itemDto);
         item.setOwner(owner);
@@ -148,13 +148,14 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemResponseDto setBookings(ItemResponseDto itemDto) {
         Long itemId = itemDto.getId();
+        LocalDateTime now = LocalDateTime.now();
         //   Last booking
         Booking lastBooking = bookingRepository.findFirstByItem_IdAndEndIsBeforeOrderByEndDesc(
-                itemId, LocalDateTime.now()).orElse(null);
+                itemId, now).orElse(null);
         itemDto.setLastBooking(bookingMapper.toBookingDtoForItem(lastBooking));
         //   Next booking
         Booking nextBooking = bookingRepository.findFirstByItem_IdAndStartIsAfterOrderByStartAsc(
-                itemId, LocalDateTime.now()).orElse(null);
+                itemId, now).orElse(null);
         itemDto.setNextBooking(bookingMapper.toBookingDtoForItem(nextBooking));
         return itemDto;
     }

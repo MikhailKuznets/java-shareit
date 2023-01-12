@@ -28,13 +28,13 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<Collection<ItemResponseDto>> getUserItems(
-            @RequestHeader("X-Sharer-User-Id") @Positive Long userId,
+            @RequestHeader("X-Sharer-User-Id") @Positive Long ownerId,
             @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
             @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
         log.info("Получен запрос GET /items . От пользователя id = {} на просмотр собственных предметов. " +
                         "Отображать по {} предметов на странице, начиная с itemId = {}.",
-                userId, size, from);
-        return new ResponseEntity<>(itemService.getUserItems(userId, from, size), HttpStatus.OK);
+                ownerId, size, from);
+        return new ResponseEntity<>(itemService.getUserItems(ownerId, from, size), HttpStatus.OK);
     }
 
     @GetMapping("/{itemId}")
@@ -58,10 +58,10 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemResponseDto> createItem(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
+    public ResponseEntity<ItemResponseDto> createItem(@RequestHeader("X-Sharer-User-Id") @Positive Long ownerId,
                                                       @RequestBody @Valid ItemRequestDto itemDto) {
-        log.info("Получен запрос Post /items . От пользователя id = {}, добавить вещь: {}", userId, itemDto);
-        return new ResponseEntity<>(itemService.createItem(itemDto, userId), HttpStatus.OK);
+        log.info("Получен запрос Post /items . От пользователя id = {}, добавить вещь: {}", ownerId, itemDto);
+        return new ResponseEntity<>(itemService.createItem(itemDto, ownerId), HttpStatus.OK);
     }
 
     @PatchMapping("/{itemId}")

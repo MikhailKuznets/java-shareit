@@ -19,6 +19,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,15 +37,17 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemMapper itemMapper;
 
     @Override
-    public ItemReqResponseDto createRequest(ItemReqRequestDto itemReqRequestDto, Long userId) {
-        User user = userRepository.validateUser(userId);
+    public ItemReqResponseDto createRequest(ItemReqRequestDto itemReqRequestDto, Long requesterId) {
+        User requester = userRepository.validateUser(requesterId);
         ItemRequest itemRequest = itemRequestMapper.toItemRequest(itemReqRequestDto);
 
         LocalDateTime now = LocalDateTime.now();
 
         itemRequest.setCreated(now);
-        itemRequest.setRequester(user);
-        return itemRequestMapper.toItemRequestDto(itemRequestRepository.save(itemRequest));
+        itemRequest.setRequester(requester);
+        ItemReqResponseDto response = itemRequestMapper.toItemRequestDto(itemRequestRepository.save(itemRequest));
+        response.setItems(Collections.EMPTY_LIST);
+        return response;
     }
 
     @Override
@@ -56,9 +59,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public Collection<ItemReqResponseDto> getUserAllRequests(Long userId) {
-        userRepository.validateUser(userId);
-        Collection<ItemRequest> requests = itemRequestRepository.findByRequesterId(userId, SORT_BY_CREATED_DESC);
+    public Collection<ItemReqResponseDto> getUserAllRequests(Long requesterId) {
+        userRepository.validateUser(requesterId);
+        Collection<ItemRequest> requests = itemRequestRepository.findByRequesterId(requesterId, SORT_BY_CREATED_DESC);
         return requests.stream()
                 .map(itemRequestMapper::toItemRequestDto)
                 .map(this::setItems)

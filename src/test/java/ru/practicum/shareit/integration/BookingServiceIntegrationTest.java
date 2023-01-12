@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static ru.practicum.shareit.TestUtility.NEXT_BOOKING_END;
 import static ru.practicum.shareit.TestUtility.NEXT_BOOKING_START;
 
-@SpringBootTest()
+@SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class BookingServiceIntegrationTest {
     @Autowired

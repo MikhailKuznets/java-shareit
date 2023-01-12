@@ -25,20 +25,20 @@ public class ItemRequestController {
 
     @PostMapping
     public ResponseEntity<ItemReqResponseDto> createRequest(@RequestHeader("X-Sharer-User-Id")
-                                                            @Positive Long userId,
+                                                            @Positive Long requesterId,
                                                             @RequestBody @Valid ItemReqRequestDto itemReqRequestDto) {
         log.info("Получен запрос POST /requests . " +
-                "От пользователя с userId = {}. Создать запрос на добавление предмета: {}.", userId, itemReqRequestDto);
-        return new ResponseEntity<>(itemRequestService.createRequest(itemReqRequestDto, userId), HttpStatus.OK);
+                "От пользователя с userId = {}. Создать запрос на добавление предмета: {}.", requesterId, itemReqRequestDto);
+        return new ResponseEntity<>(itemRequestService.createRequest(itemReqRequestDto, requesterId), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<Collection<ItemReqResponseDto>> getUserAllRequests(@RequestHeader("X-Sharer-User-Id")
-                                                                             @Positive Long userId) {
+                                                                             @Positive Long requesterId) {
         log.info("Получен запрос Get /requests . " +
                 "От пользователя с userId = {}. " +
-                "Найти его запросы на добавление предмета.", userId);
-        return new ResponseEntity<>(itemRequestService.getUserAllRequests(userId), HttpStatus.OK);
+                "Найти его запросы на добавление предмета.", requesterId);
+        return new ResponseEntity<>(itemRequestService.getUserAllRequests(requesterId), HttpStatus.OK);
     }
 
     @GetMapping("/{requestId}")

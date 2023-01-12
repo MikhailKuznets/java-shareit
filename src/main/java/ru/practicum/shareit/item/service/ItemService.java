@@ -9,11 +9,11 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.Collection;
 
 public interface ItemService {
-    Collection<ItemResponseDto> getUserItems(Long userId, Integer from, Integer size);
+    Collection<ItemResponseDto> getUserItems(Long ownerId, Integer from, Integer size);
 
     ItemResponseDto getItemById(Long itemId, Long userId);
 
-    ItemResponseDto createItem(ItemRequestDto itemRequestDto, Long userId);
+    ItemResponseDto createItem(ItemRequestDto itemRequestDto, Long ownerId);
 
     ItemResponseDto updateItem(Long userId, ItemRequestDto itemRequestDto, Long itemId);
 
