@@ -13,7 +13,11 @@ import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.comment.dto.CommentMapper;
+import ru.practicum.shareit.comment.model.Comment;
+import ru.practicum.shareit.comment.repository.CommentRepository;
 import ru.practicum.shareit.exceptions.*;
+import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -32,7 +36,9 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final CommentRepository commentRepository;
     private final BookingMapper bookingMapper;
+    private final CommentMapper commentMapper;
 
 
     @Override
@@ -44,11 +50,12 @@ public class BookingServiceImpl implements BookingService {
         }
 
         User booker = userRepository.validateUser(userId);
-        Item item = itemRepository.validateItem(bookingRequestDto.getItemId());
+        Long itemId = bookingRequestDto.getItemId();
+        Item item = itemRepository.validateItem(itemId);
 
         //   Проверка Item.Status
         if (!item.getAvailable()) {
-            throw new BookingUnavailableException("Предмет с itemId = " + item.getId() +
+            throw new BookingUnavailableException("Предмет с itemId = " + itemId +
                     " не доступна для бронирования");
         }
 
@@ -60,7 +67,8 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingMapper.toBookingFromBookingRequestDto(bookingRequestDto);
         booking.setBooker(booker);
         booking.setItem(item);
-        return bookingMapper.toBookingResponseDto(bookingRepository.save(booking));
+        BookingResponseDto bookingDto = bookingMapper.toBookingResponseDto(bookingRepository.save(booking));
+        return setComments(bookingDto);
     }
 
     @Override
@@ -107,7 +115,8 @@ public class BookingServiceImpl implements BookingService {
             throw new InvalidIdException("Нет прав на просмотр бронирования. Пользователь с userId = "
                     + userId + " не является создателем бронирования или собственником предмета");
         }
-        return bookingMapper.toBookingResponseDto(booking);
+        BookingResponseDto bookingDto = bookingMapper.toBookingResponseDto(booking);
+        return setComments(bookingDto);
     }
 
     @Override
@@ -150,7 +159,10 @@ public class BookingServiceImpl implements BookingService {
             default:
                 throw new InvalidStatusException("Неподдерживаемый BookingState: " + state.name());
         }
-        return bookings.stream().map(bookingMapper::toBookingResponseDto).collect(Collectors.toList());
+        return bookings.stream()
+                .map(bookingMapper::toBookingResponseDto)
+                .map(this::setComments)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -190,7 +202,22 @@ public class BookingServiceImpl implements BookingService {
             default:
                 throw new InvalidStatusException("Неподдерживаемый BookingState: " + state.name());
         }
-        return bookings.stream().map(bookingMapper::toBookingResponseDto).collect(Collectors.toList());
+        return bookings.stream()
+                .map(bookingMapper::toBookingResponseDto)
+                .map(this::setComments)
+                .collect(Collectors.toList());
     }
 
+    private BookingResponseDto setComments(BookingResponseDto bookingDto) {
+        ItemResponseDto item = bookingDto.getItem();
+        Long itemId = item.getId();
+
+        Collection<Comment> comments = commentRepository.findAllByItem_Id(itemId);
+
+        item.setComments(comments.stream()
+                .map(commentMapper::toCommentResponseDto)
+                .collect(Collectors.toList()));
+        bookingDto.setItem(item);
+        return bookingDto;
+    }
 }

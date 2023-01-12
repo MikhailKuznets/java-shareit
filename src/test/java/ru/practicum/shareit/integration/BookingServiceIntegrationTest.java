@@ -49,7 +49,6 @@ class BookingServiceIntegrationTest {
     private Collection<BookingResponseDto> expectedBookings;
 
 
-
     @BeforeEach
     void setUp() {
         // Users
@@ -89,6 +88,7 @@ class BookingServiceIntegrationTest {
     @DisplayName("Должен создать и вернуть Booking при корректных данных")
     void createBooking() {
         responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
+
         assertNotNull(responseBooking);
         assertEquals(expectedResponseBooking, responseBooking);
     }

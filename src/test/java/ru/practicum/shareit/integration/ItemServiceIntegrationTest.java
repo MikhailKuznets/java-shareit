@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.TestUtility;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
+import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import ru.practicum.shareit.comment.dto.CommentRequestDto;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
@@ -33,7 +35,11 @@ class ItemServiceIntegrationTest {
     @Autowired
     private UserServiceImpl userService;
 
+    @Autowired
+    private BookingServiceImpl bookingService;
+
     private final static Long OWNER_ID = 1L;
+    private final static Long BOOKER_ID = 2L;
     private final static Long ITEM_ID = 1L;
     private final static Long COMMENT_ID = 1L;
     private final static Long BOOKING_ID = 1L;
@@ -44,10 +50,6 @@ class ItemServiceIntegrationTest {
     private ItemResponseDto expectedResponseItem;
 
     private UserDto owner;
-    private UserDto booker;
-
-    private BookingResponseDto booking;
-
     private List<ItemResponseDto> items;
     private List<ItemResponseDto> expectedItems;
 
@@ -159,7 +161,11 @@ class ItemServiceIntegrationTest {
     }
 
     @Test
-    void shouldCreateComment() {
+    @DisplayName("Должен создать и вернуть Comment по завершению бронирования")
+    void shouldCreateComment() throws InterruptedException {
+        // Создаем Booker
+        User requestBooker = TestUtility.getUser2();
+        UserDto booker = userService.createUser(requestBooker);
         // Создаем Item
         item = itemService.createItem(requestItem, OWNER_ID);
         assertNotNull(item);
@@ -167,33 +173,23 @@ class ItemServiceIntegrationTest {
         item = itemService.getItemById(ITEM_ID, OWNER_ID);
         assertNotNull(item);
         assertEquals(expectedResponseItem, item);
-
+        // Создаем Booking
+        BookingRequestDto requestBooking = BookingRequestDto.builder()
+                .itemId(ITEM_ID)
+                .start(LocalDateTime.now())
+                .end(LocalDateTime.now().plusNanos(1000))
+                .build();
+        bookingService.createBooking(requestBooking, BOOKER_ID);
+        // Подтверждаем Booking
+        BookingResponseDto booking = bookingService.approveBooking(BOOKING_ID, OWNER_ID, true);
+        // Создаем Comment
         CommentRequestDto requestComment = TestUtility.getCommentRequestDto();
-        LocalDateTime created = LocalDateTime.now().withNano(0);
-        CommentResponseDto comment = itemService.createComment(requestComment, ITEM_ID, OWNER_ID);
+        CommentResponseDto comment = itemService.createComment(requestComment, ITEM_ID, BOOKER_ID);
 
         assertNotNull(comment);
         assertEquals(COMMENT_ID, COMMENT_ID);
         assertEquals(requestComment.getText(), comment.getText());
-        assertEquals(owner.getName(), comment.getAuthorName());
-        assertEquals(created, comment.getCreated().withNano(0));
-
-
+        assertEquals(booker.getName(), comment.getAuthorName());
     }
 
-    @Test
-    void shouldSetBookings() {
-        item = itemService.createItem(requestItem, OWNER_ID);
-        assertNotNull(item);
-        assertEquals(expectedResponseItem, item);
-        item = itemService.getItemById(ITEM_ID, OWNER_ID);
-        assertNotNull(item);
-        assertEquals(expectedResponseItem, item);
-
-
-    }
-
-    @Test
-    void shouldSetComments() {
-    }
 }

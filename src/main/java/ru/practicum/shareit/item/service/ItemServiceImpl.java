@@ -60,7 +60,6 @@ public class ItemServiceImpl implements ItemService {
         userRepository.validateUser(userId);
         Item item = itemRepository.validateItem(itemId);
 
-
         ItemResponseDto itemDto = itemMapper.toItemResponseDto(item);
         if (item.getOwner().getId().equals(userId)) {
             itemDto = setBookings(itemDto);
