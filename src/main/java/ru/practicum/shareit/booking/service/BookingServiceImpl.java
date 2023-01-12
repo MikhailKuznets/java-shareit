@@ -128,7 +128,7 @@ public class BookingServiceImpl implements BookingService {
         LocalDateTime now = LocalDateTime.now();
 
         PageRequest pageRequest = PageRequest.of(from, size, START_DESC_SORT);
-        Page<Booking> bookings;
+        Page<Booking> bookings= Page.empty();
 
         switch (state) {
             case ALL:
@@ -156,8 +156,6 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findByBooker_IdAndStatusIs(bookerId, BookingStatus.REJECTED,
                         pageRequest);
                 break;
-            default:
-                throw new InvalidStatusException("Неподдерживаемый BookingState: " + state.name());
         }
         return bookings.stream()
                 .map(bookingMapper::toBookingResponseDto)
@@ -174,7 +172,7 @@ public class BookingServiceImpl implements BookingService {
         LocalDateTime now = LocalDateTime.now();
 
         PageRequest pageRequest = PageRequest.of(from, size, START_DESC_SORT);
-        Page<Booking> bookings;
+        Page<Booking> bookings = Page.empty();
         switch (state) {
             case ALL:
                 bookings = bookingRepository.findByItem_Owner_Id(ownerId, pageRequest);
@@ -199,8 +197,6 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findByItem_Owner_IdAndStatusIs(
                         ownerId, BookingStatus.REJECTED, pageRequest);
                 break;
-            default:
-                throw new InvalidStatusException("Неподдерживаемый BookingState: " + state.name());
         }
         return bookings.stream()
                 .map(bookingMapper::toBookingResponseDto)
