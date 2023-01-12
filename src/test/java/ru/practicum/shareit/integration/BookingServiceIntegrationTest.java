@@ -116,8 +116,8 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("Должен список Booking's пользователя при корректных данных")
-    void getUserAllBookings() {
+    @DisplayName("Должен вернуть список Booking's пользователя при корректных данных")
+    void shouldGetUserAllBookings() {
         responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
         assertNotNull(responseBooking);
         assertEquals(expectedResponseBooking, responseBooking);
@@ -132,8 +132,8 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("Должен список бронирований Booking's всех предметов собственника при корректных данных")
-    void getOwnerItemAllBookings() {
+    @DisplayName("Должен вернуть список бронирований Booking's всех предметов собственника при корректных данных")
+    void shouldGetOwnerItemAllBookings() {
         responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
         assertNotNull(responseBooking);
         assertEquals(expectedResponseBooking, responseBooking);

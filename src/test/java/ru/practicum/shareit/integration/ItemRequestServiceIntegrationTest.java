@@ -78,7 +78,7 @@ class ItemRequestServiceIntegrationTest {
 
     @Test
     @DisplayName("Должен вернуть Request по requestId при корректных данных")
-    void getRequestById() {
+    void shouldGetRequestById() {
         // Создаем Request
         LocalDateTime now = LocalDateTime.now().withNano(0);
         responseItemRequest = requestService.createRequest(requestItemRequest, REQUESTER_ID);
@@ -99,7 +99,7 @@ class ItemRequestServiceIntegrationTest {
 
     @Test
     @DisplayName("Должен вернуть список собственных Requests определенного User при корректных данных")
-    void getUserAllRequests() {
+    void shouldGetUserAllRequests() {
         // Создаем Request
         LocalDateTime now = LocalDateTime.now().withNano(0);
         responseItemRequest = requestService.createRequest(requestItemRequest, REQUESTER_ID);
@@ -124,7 +124,7 @@ class ItemRequestServiceIntegrationTest {
 
     @Test
     @DisplayName("Должен вернуть список Requests других Users при корректных данных")
-    void getAllRequestByOtherUsers() {
+    void shouldGetAllRequestByOtherUsers() {
         // Создаем Request
         LocalDateTime now = LocalDateTime.now().withNano(0);
         responseItemRequest = requestService.createRequest(requestItemRequest, REQUESTER_ID);

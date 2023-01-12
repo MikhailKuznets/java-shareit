@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ItemRequestServiceImpl implements ItemRequestService {
 
-    private static final Sort SORT_BY_CREATED_DESC = Sort.by(Sort.Direction.DESC, "created");
+    private static final Sort CREATED_DESC_SORT = Sort.by(Sort.Direction.DESC, "created");
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -61,7 +61,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public Collection<ItemReqResponseDto> getUserAllRequests(Long requesterId) {
         userRepository.validateUser(requesterId);
-        Collection<ItemRequest> requests = itemRequestRepository.findByRequesterId(requesterId, SORT_BY_CREATED_DESC);
+        Collection<ItemRequest> requests = itemRequestRepository.findByRequesterId(requesterId, CREATED_DESC_SORT);
         return requests.stream()
                 .map(itemRequestMapper::toItemRequestDto)
                 .map(this::setItems)
@@ -72,7 +72,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public Collection<ItemReqResponseDto> getAllRequestByOtherUsers(Long userId, Integer from, Integer size) {
         userRepository.validateUser(userId);
 
-        PageRequest pageRequest = PageRequest.of(from, size, SORT_BY_CREATED_DESC);
+        PageRequest pageRequest = PageRequest.of(from, size, CREATED_DESC_SORT);
         Page<ItemRequest> page = itemRequestRepository.findByRequesterIdIsNot(userId, pageRequest);
         Collection<ItemRequest> requests = page.getContent();
         return requests.stream()

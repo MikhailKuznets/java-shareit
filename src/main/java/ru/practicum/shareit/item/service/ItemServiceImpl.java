@@ -29,7 +29,6 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,12 +48,11 @@ public class ItemServiceImpl implements ItemService {
     public Collection<ItemResponseDto> getUserItems(Long ownerId, Integer from, Integer size) {
         PageRequest pageRequest = PageRequest.of(from, size);
         Page<Item> userItems = itemRepository.findAllByOwner_IdOrderByIdAsc(ownerId, pageRequest);
-        Collection<ItemResponseDto> userItemsDto = userItems.stream()
+        return userItems.stream()
                 .map(itemMapper::toItemResponseDto)
                 .map(this::setBookings)
                 .map(this::setComments)
                 .collect(Collectors.toList());
-        return userItemsDto;
     }
 
     @Override
@@ -79,12 +77,14 @@ public class ItemServiceImpl implements ItemService {
         item.setOwner(owner);
 
         Long requestId = itemDto.getRequestId();
-        if (Objects.nonNull(requestId)) {
+        if (requestId != null) {
             ItemRequest request = itemRequestRepository.validateItemRequest(itemDto.getRequestId());
             item.setRequest(request);
         }
 
-        return itemMapper.toItemResponseDto(itemRepository.save(item));
+        ItemResponseDto response = itemMapper.toItemResponseDto(itemRepository.save(item));
+        response.setComments(Collections.EMPTY_LIST);
+        return response;
     }
 
     @Override
@@ -126,7 +126,10 @@ public class ItemServiceImpl implements ItemService {
         String lowerText = text.toLowerCase();
         PageRequest pageRequest = PageRequest.of(from, size);
         Page<Item> items = itemRepository.searchItemByText(lowerText, pageRequest);
-        return items.stream().map(itemMapper::toItemResponseDto).collect(Collectors.toList());
+        return items.stream()
+                .map(itemMapper::toItemResponseDto)
+                .map(this::setComments)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BookingServiceImpl implements BookingService {
 
-    private static final Sort SORT_BY_START_DESC = Sort.by(Sort.Direction.DESC, "start");
+    private static final Sort START_DESC_SORT = Sort.by(Sort.Direction.DESC, "start");
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -118,14 +118,14 @@ public class BookingServiceImpl implements BookingService {
         userRepository.validateUser(bookerId);
         LocalDateTime now = LocalDateTime.now();
 
-        PageRequest pageRequest = PageRequest.of(from, size, SORT_BY_START_DESC);
+        PageRequest pageRequest = PageRequest.of(from, size, START_DESC_SORT);
         Page<Booking> bookings;
 
         switch (state) {
             case ALL:
                 bookings = bookingRepository.findAllByBooker_Id(bookerId,
                         // затычка для прохождения некорректных тестов Postman - обсуждалась в пачке
-                        PageRequest.of((from / size), size, SORT_BY_START_DESC));
+                        PageRequest.of((from / size), size, START_DESC_SORT));
                 break;
             case CURRENT:
                 bookings = bookingRepository.findByBooker_IdAndStartIsBeforeAndEndIsAfter(bookerId, now, now,
@@ -161,7 +161,7 @@ public class BookingServiceImpl implements BookingService {
         userRepository.validateUser(ownerId);
         LocalDateTime now = LocalDateTime.now();
 
-        PageRequest pageRequest = PageRequest.of(from, size, SORT_BY_START_DESC);
+        PageRequest pageRequest = PageRequest.of(from, size, START_DESC_SORT);
         Page<Booking> bookings;
         switch (state) {
             case ALL:
