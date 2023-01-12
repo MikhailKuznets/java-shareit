@@ -16,7 +16,10 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.comment.dto.CommentMapper;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.comment.repository.CommentRepository;
-import ru.practicum.shareit.exceptions.*;
+import ru.practicum.shareit.exceptions.BookingAlreadyApprovedException;
+import ru.practicum.shareit.exceptions.BookingInvalidTimeException;
+import ru.practicum.shareit.exceptions.BookingUnavailableException;
+import ru.practicum.shareit.exceptions.InvalidIdException;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -67,6 +70,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingMapper.toBookingFromBookingRequestDto(bookingRequestDto);
         booking.setBooker(booker);
         booking.setItem(item);
+        booking.setStatus(BookingStatus.WAITING);
         BookingResponseDto bookingDto = bookingMapper.toBookingResponseDto(bookingRepository.save(booking));
         return setComments(bookingDto);
     }
@@ -128,7 +132,7 @@ public class BookingServiceImpl implements BookingService {
         LocalDateTime now = LocalDateTime.now();
 
         PageRequest pageRequest = PageRequest.of(from, size, START_DESC_SORT);
-        Page<Booking> bookings= Page.empty();
+        Page<Booking> bookings = Page.empty();
 
         switch (state) {
             case ALL:
