@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.practicum.shareit.TestUtility;
 import ru.practicum.shareit.comment.dto.CommentRequestDto;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
+import ru.practicum.shareit.exceptions.BookingNotFinishedException;
 import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
@@ -163,4 +164,25 @@ class ItemControllerRestTest {
 
         verify(itemService, times(1)).createComment(requestComment, ITEM_1_ID, USER_1_ID);
     }
+
+    @Test
+    @DisplayName("Должен обработать BookingNotFinishedException")
+    void shouldNotCreateCommentIfBookingNotFinish() throws Exception {
+        CommentRequestDto requestComment = TestUtility.getCommentRequestDto();
+        CommentResponseDto responseComment = TestUtility.getCommentResponseDto();
+
+        when(itemService.createComment(any(CommentRequestDto.class), anyLong(), anyLong())).thenThrow(
+                new BookingNotFinishedException("Оставить отзыв можно только на завершенное бронирование."));
+
+        mockMvc.perform(MockMvcRequestBuilders.post(PATH_WITH_ID + "/comment")
+                        .header(X_SHADER_USER_ID, USER_1_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestComment))
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+        verify(itemService, times(1)).createComment(requestComment, ITEM_1_ID, USER_1_ID);
+    }
+
+
 }

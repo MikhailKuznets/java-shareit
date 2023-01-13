@@ -19,6 +19,10 @@ import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exceptions.BookingAlreadyApprovedException;
+import ru.practicum.shareit.exceptions.BookingInvalidTimeException;
+import ru.practicum.shareit.exceptions.BookingUnavailableException;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
@@ -43,6 +47,8 @@ class BookingControllerRestTest {
     private ObjectMapper objectMapper;
     @MockBean
     private BookingService bookingService;
+    @MockBean
+    private User otherUser;
 
     private BookingRequestDto requestBooking;
     private BookingResponseDto responseBooking;
@@ -150,4 +156,53 @@ class BookingControllerRestTest {
                 .getOwnerItemAllBookings(USER_1_ID, BookingState.ALL, 0, 10);
     }
 
+    @Test
+    @DisplayName("Должен обработать BookingInvalidTimeException")
+    void shouldNotCreateBookingByInvalidTime() throws Exception {
+        when(bookingService.createBooking(any(BookingRequestDto.class), anyLong())).thenThrow(
+                new BookingInvalidTimeException("Время и дата начала бронирования должно быть раньше " +
+                        "конечного времени и даты бронирования"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+                        .header(X_SHADER_USER_ID, USER_1_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBooking))
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        verify(bookingService, times(1)).createBooking(requestBooking, USER_1_ID);
+
+    }
+
+    @Test
+    @DisplayName("Должен обработать BookingUnavailableException")
+    void shouldNotCreateBookingUnavailableItem() throws Exception {
+        when(bookingService.createBooking(any(BookingRequestDto.class), anyLong())).thenThrow(
+                new BookingUnavailableException("Предмет с itemId = 1 не доступна для бронирования"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+                        .header(X_SHADER_USER_ID, USER_1_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBooking))
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        verify(bookingService, times(1)).createBooking(requestBooking, USER_1_ID);
+
+    }
+
+    @Test
+    @DisplayName("Должен обработать BookingAlreadyApprovedException")
+    void shouldNotApproveApprovedBooking() throws Exception {
+        responseBooking.setStatus(BookingStatus.APPROVED);
+
+        when(bookingService.approveBooking(anyLong(), anyLong(), anyBoolean())).thenThrow(
+                new BookingAlreadyApprovedException("Данное бронирование уже подтверждено"));
+
+        mockMvc.perform(MockMvcRequestBuilders.patch(PATH_WITH_ID + "?approved=true")
+                        .header(X_SHADER_USER_ID, USER_1_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBooking))
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        verify(bookingService, times(1)).approveBooking(BOOKING_1_ID, USER_1_ID, true);
+    }
 }

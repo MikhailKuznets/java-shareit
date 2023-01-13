@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.practicum.shareit.TestUtility;
+import ru.practicum.shareit.exceptions.InvalidIdException;
 import ru.practicum.shareit.user.controller.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -125,4 +126,31 @@ class UserControllerRestTest {
         verify(userService, times(1)).findAllUsers();
     }
 
+    @Test
+    @DisplayName("Должен обработать Exception при некорректном userId")
+    void shouldNotFindUserByInvalidId() throws Exception {
+        when(userService.findUserById(anyLong())).thenThrow(
+                new InvalidIdException("Пользователя с id = 1 не существует"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(PATH_WITH_ID, USER_1_ID)
+                )
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+        verify(userService, times(1)).findUserById(USER_1_ID);
+    }
+
+    @Test
+    @DisplayName("Должен обработать Exception")
+    void shouldNotCreateUserByInvalidData() throws Exception {
+        when(userService.createUser(any(User.class))).thenThrow(NullPointerException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestUser1))
+                )
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError()
+                );
+
+        verify(userService, times(1)).createUser(requestUser1);
+    }
 }

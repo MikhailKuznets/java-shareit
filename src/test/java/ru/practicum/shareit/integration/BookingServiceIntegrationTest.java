@@ -116,8 +116,8 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("Должен вернуть список Booking's пользователя при корректных данных")
-    void shouldGetUserAllBookings() {
+    @DisplayName("Должен вернуть список Booking's пользователя при корректных данных, BookingState.ALL")
+    void shouldGetUserAllBookingsStateAll() {
         responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
         assertNotNull(responseBooking);
         assertEquals(expectedResponseBooking, responseBooking);
@@ -132,8 +132,60 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("Должен вернуть список бронирований Booking's всех предметов собственника при корректных данных")
-    void shouldGetOwnerItemAllBookings() {
+    @DisplayName("Должен вернуть список Booking's пользователя при корректных данных, BookingState.ALL")
+    void shouldGetUserAllBookingsStateWaiting() {
+        responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
+        assertNotNull(responseBooking);
+        assertEquals(expectedResponseBooking, responseBooking);
+
+        int from = 0;
+        int size = 10;
+        expectedBookings = List.of(expectedResponseBooking);
+        bookings = bookingService.getUserAllBookings(BOOKER_ID, BookingState.WAITING, from, size);
+        assertNotNull(expectedBookings);
+        assertEquals(1, expectedBookings.size());
+        assertEquals(expectedBookings, bookings);
+    }
+
+    @Test
+    @DisplayName("Должен вернуть список Booking's пользователя при корректных данных, BookingState.FUTURE")
+    void shouldGetUserAllBookingsStateFuture() {
+        responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
+        assertNotNull(responseBooking);
+        assertEquals(expectedResponseBooking, responseBooking);
+
+        int from = 0;
+        int size = 10;
+        expectedBookings = List.of(expectedResponseBooking);
+        bookings = bookingService.getUserAllBookings(BOOKER_ID, BookingState.FUTURE, from, size);
+        assertNotNull(expectedBookings);
+        assertEquals(1, expectedBookings.size());
+        assertEquals(expectedBookings, bookings);
+    }
+
+    @Test
+    @DisplayName("Должен вернуть список Booking's пользователя при корректных данных, BookingState.REJECTED")
+    void shouldGetUserAllBookingsStateRejected() {
+        responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
+        assertNotNull(responseBooking);
+        assertEquals(expectedResponseBooking, responseBooking);
+
+        bookingService.approveBooking(BOOKING_ID, OWNER_ID, false);
+        expectedResponseBooking.setStatus(BookingStatus.REJECTED);
+
+        int from = 0;
+        int size = 10;
+        expectedBookings = List.of(expectedResponseBooking);
+        bookings = bookingService.getUserAllBookings(BOOKER_ID, BookingState.REJECTED, from, size);
+        assertNotNull(expectedBookings);
+        assertEquals(1, expectedBookings.size());
+        assertEquals(expectedBookings, bookings);
+    }
+
+    @Test
+    @DisplayName("Должен вернуть список бронирований Booking's всех предметов собственника при корректных данных" +
+            "BookingState.ALL")
+    void shouldGetOwnerItemAllBookingsStateAll() {
         responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
         assertNotNull(responseBooking);
         assertEquals(expectedResponseBooking, responseBooking);
@@ -146,4 +198,60 @@ class BookingServiceIntegrationTest {
         assertEquals(1, expectedBookings.size());
         assertEquals(expectedBookings, bookings);
     }
+
+    @Test
+    @DisplayName("Должен вернуть список бронирований Booking's всех предметов собственника при корректных данных" +
+            "BookingState.WAITING")
+    void shouldGetOwnerItemAllBookingsStateWaiting() {
+        responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
+        assertNotNull(responseBooking);
+        assertEquals(expectedResponseBooking, responseBooking);
+
+        int from = 0;
+        int size = 10;
+        expectedBookings = List.of(expectedResponseBooking);
+        bookings = bookingService.getOwnerItemAllBookings(OWNER_ID, BookingState.WAITING, from, size);
+        assertNotNull(expectedBookings);
+        assertEquals(1, expectedBookings.size());
+        assertEquals(expectedBookings, bookings);
+    }
+
+    @Test
+    @DisplayName("Должен вернуть список бронирований Booking's всех предметов собственника при корректных данных" +
+            "BookingState.FUTURE")
+    void shouldGetOwnerItemAllBookingsStateFuture() {
+        responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
+        assertNotNull(responseBooking);
+        assertEquals(expectedResponseBooking, responseBooking);
+
+        int from = 0;
+        int size = 10;
+        expectedBookings = List.of(expectedResponseBooking);
+        bookings = bookingService.getOwnerItemAllBookings(OWNER_ID, BookingState.FUTURE, from, size);
+        assertNotNull(expectedBookings);
+        assertEquals(1, expectedBookings.size());
+        assertEquals(expectedBookings, bookings);
+    }
+
+    @Test
+    @DisplayName("Должен вернуть список бронирований Booking's всех предметов собственника при корректных данных" +
+            "BookingState.REJECTED")
+    void shouldGetOwnerItemAllBookingsStateRejected() {
+        responseBooking = bookingService.createBooking(requestBooking, BOOKER_ID);
+        assertNotNull(responseBooking);
+        assertEquals(expectedResponseBooking, responseBooking);
+
+        bookingService.approveBooking(BOOKING_ID, OWNER_ID, false);
+        expectedResponseBooking.setStatus(BookingStatus.REJECTED);
+
+        int from = 0;
+        int size = 10;
+        expectedBookings = List.of(expectedResponseBooking);
+        bookings = bookingService.getOwnerItemAllBookings(OWNER_ID, BookingState.REJECTED, from, size);
+        assertNotNull(expectedBookings);
+        assertEquals(1, expectedBookings.size());
+        assertEquals(expectedBookings, bookings);
+    }
+
+
 }
