@@ -4,18 +4,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.shareit.exceptions.InvalidIdException;
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.util.Collection;
 
+@Repository
 public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> {
-    default ItemRequest validateItemRequest(Long requestId) {
-        return findById(requestId).orElseThrow(() -> {
-            throw new InvalidIdException("Запрос с id = " + requestId + " на добавление предмета не существует");
-        });
-    }
-
     Collection<ItemRequest> findByRequesterId(Long userId, Sort sort);
 
     Page<ItemRequest> findByRequesterIdIsNot(Long userId, Pageable pageable);

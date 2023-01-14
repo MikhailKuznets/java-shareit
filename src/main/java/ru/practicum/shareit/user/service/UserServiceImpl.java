@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exceptions.InvalidIdException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findUserById(Long userId) {
-        return userMapper.toUserDto(userRepository.validateUser(userId));
+        return userMapper.toUserDto(getUser(userId));
     }
 
     @Override
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(Long userId, User user) {
-        User selectedUser = userRepository.validateUser(userId);
+        User selectedUser = getUser(userId);
 
         String updatedName = user.getName();
         if (updatedName != null) {
@@ -55,7 +56,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long userId) {
-        userRepository.validateUser(userId);
         userRepository.deleteById(userId);
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> {
+            throw new InvalidIdException("Пользователя с id = " + userId + " не существует");
+        });
     }
 }

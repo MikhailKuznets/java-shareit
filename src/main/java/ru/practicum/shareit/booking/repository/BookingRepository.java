@@ -3,20 +3,15 @@ package ru.practicum.shareit.booking.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.exceptions.InvalidIdException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-
-    default Booking validateBooking(Long bookingId) {
-        return findById(bookingId).orElseThrow(() -> {
-            throw new InvalidIdException("Бронирование с id = " + bookingId + " не существует");
-        });
-    }
 
     Page<Booking> findAllByBooker_Id(Long bookerId, Pageable pageable);
 

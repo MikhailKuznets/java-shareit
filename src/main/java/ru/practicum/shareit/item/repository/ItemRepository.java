@@ -4,18 +4,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.shareit.exceptions.InvalidIdException;
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.Collection;
 
+@Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-
-    default Item validateItem(Long itemId) {
-        return findById(itemId).orElseThrow(() -> {
-            throw new InvalidIdException("Предмет с id = " + itemId + " не существует");
-        });
-    }
 
     Page<Item> findAllByOwner_IdOrderByIdAsc(Long userId, PageRequest pageRequest);
 

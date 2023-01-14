@@ -52,9 +52,11 @@ public class BookingServiceImpl implements BookingService {
                     "конечного времени и даты бронирования");
         }
 
-        User booker = userRepository.validateUser(userId);
+        User booker = getUser(userId);
         Long itemId = bookingRequestDto.getItemId();
-        Item item = itemRepository.validateItem(itemId);
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> {
+            throw new InvalidIdException("Предмет с id = " + itemId + " не существует");
+        });
 
         //   Проверка Item.Status
         if (!item.getAvailable()) {
@@ -77,8 +79,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponseDto approveBooking(Long bookingId, Long userId, Boolean isApproved) {
-        Booking booking = bookingRepository.validateBooking(bookingId);
-        User user = userRepository.validateUser(userId);
+        Booking booking = getBooking(bookingId);
+        User user = getUser(userId);
 
         Item item = booking.getItem();
         if (!item.getOwner().equals(user)) {
@@ -100,9 +102,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponseDto getBookingById(Long bookingId, Long userId) {
-        userRepository.validateUser(userId);
+        getUser(userId);
 
-        Booking booking = bookingRepository.validateBooking(bookingId);
+        Booking booking = getBooking(bookingId);
 
         User booker = booking.getBooker();
         Long bookerId = booker.getId();
@@ -128,7 +130,7 @@ public class BookingServiceImpl implements BookingService {
                                                              BookingState state,
                                                              Integer from,
                                                              Integer size) {
-        userRepository.validateUser(bookerId);
+        getUser(bookerId);
         LocalDateTime now = LocalDateTime.now();
 
         PageRequest pageRequest = PageRequest.of(from, size, START_DESC_SORT);
@@ -172,7 +174,7 @@ public class BookingServiceImpl implements BookingService {
                                                                   BookingState state,
                                                                   Integer from,
                                                                   Integer size) {
-        userRepository.validateUser(ownerId);
+        getUser(ownerId);
         LocalDateTime now = LocalDateTime.now();
 
         PageRequest pageRequest = PageRequest.of(from, size, START_DESC_SORT);
@@ -220,4 +222,17 @@ public class BookingServiceImpl implements BookingService {
         bookingDto.setItem(item);
         return bookingDto;
     }
+
+    private Booking getBooking(Long bookingId) {
+        return bookingRepository.findById(bookingId).orElseThrow(() -> {
+            throw new InvalidIdException("Бронирование с id = " + bookingId + " не существует");
+        });
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> {
+            throw new InvalidIdException("Пользователя с id = " + userId + " не существует");
+        });
+    }
+
 }

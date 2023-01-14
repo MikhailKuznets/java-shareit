@@ -57,8 +57,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponseDto getItemById(Long itemId, Long userId) {
-        userRepository.validateUser(userId);
-        Item item = itemRepository.validateItem(itemId);
+        getUser(userId);
+        Item item = getItem(itemId);
 
         ItemResponseDto itemDto = itemMapper.toItemResponseDto(item);
         if (item.getOwner().getId().equals(userId)) {
@@ -70,14 +70,16 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponseDto createItem(ItemRequestDto itemDto, Long ownerId) {
-        User owner = userRepository.validateUser(ownerId);
+        User owner = getUser(ownerId);
 
         Item item = itemMapper.toItem(itemDto);
         item.setOwner(owner);
 
         Long requestId = itemDto.getRequestId();
         if (requestId != null) {
-            ItemRequest request = itemRequestRepository.validateItemRequest(itemDto.getRequestId());
+            ItemRequest request = itemRequestRepository.findById(requestId).orElseThrow(() -> {
+                throw new InvalidIdException("Запрос с id = " + requestId + " на добавление предмета не существует");
+            });
             item.setRequest(request);
         }
 
@@ -88,9 +90,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponseDto updateItem(Long userId, ItemRequestDto itemDto, Long itemId) {
-        userRepository.validateUser(userId);
+        getUser(userId);
 
-        Item selectedItem = itemRepository.validateItem(itemId);
+        Item selectedItem = getItem(itemId);
 
         Long currentItemUserId = selectedItem.getOwner().getId();
 
@@ -133,8 +135,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long itemId, Long userId) {
-        Item item = itemRepository.validateItem(itemId);
-        User user = userRepository.validateUser(userId);
+        Item item = getItem(itemId);
+        User user = getUser(userId);
 
         if (!bookingRepository.existsBookingByItem_IdAndBooker_IdAndStatusAndEndIsBefore(
                 itemId, userId, BookingStatus.APPROVED, LocalDateTime.now())) {
@@ -171,5 +173,16 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
+    private Item getItem(Long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(() -> {
+            throw new InvalidIdException("Предмет с id = " + itemId + " не существует");
+        });
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> {
+            throw new InvalidIdException("Пользователя с id = " + userId + " не существует");
+        });
+    }
 
 }

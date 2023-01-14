@@ -95,8 +95,8 @@ class BookingServiceUnitTest {
     void shouldNotCreateBookingUnavailableItem() {
         bookedItem.setAvailable(false);
 
-        when(userRepository.validateUser(BOOKER_ID)).thenReturn(booker);
-        when(itemRepository.validateItem(anyLong())).thenReturn(bookedItem);
+        when(userRepository.getUser(BOOKER_ID)).thenReturn(booker);
+        when(itemRepository.getItem(anyLong())).thenReturn(bookedItem);
 
         assertThrows(BookingUnavailableException.class,
                 () -> bookingService.createBooking(requestBooking, BOOKER_ID));
@@ -105,8 +105,8 @@ class BookingServiceUnitTest {
     @Test
     @DisplayName("Не должен создать Booking собственного предмета собственником")
     void shouldNotCreateBookingOwnerItem() {
-        when(userRepository.validateUser(OWNER_ID)).thenReturn(owner);
-        when(itemRepository.validateItem(anyLong())).thenReturn(bookedItem);
+        when(userRepository.getUser(OWNER_ID)).thenReturn(owner);
+        when(itemRepository.getItem(anyLong())).thenReturn(bookedItem);
 
         assertThrows(InvalidIdException.class,
                 () -> bookingService.createBooking(requestBooking, OWNER_ID));
@@ -115,8 +115,8 @@ class BookingServiceUnitTest {
     @Test
     @DisplayName("Не должен подтвердить Booking не собственником")
     void shouldNotApproveBookingByOtherUser() {
-        when(bookingRepository.validateBooking(BOOKING_ID)).thenReturn(booking);
-        when(userRepository.validateUser(OTHER_USER_ID)).thenReturn(otherUser);
+        when(bookingRepository.getBooking(BOOKING_ID)).thenReturn(booking);
+        when(userRepository.getUser(OTHER_USER_ID)).thenReturn(otherUser);
 
         when(booking.getItem()).thenReturn(bookedItem);
 
@@ -127,8 +127,8 @@ class BookingServiceUnitTest {
     @Test
     @DisplayName("Не должен подтвердить уже подтверпжденный Booking")
     void shouldNotApproveApprovedBooking() {
-        when(bookingRepository.validateBooking(BOOKING_ID)).thenReturn(booking);
-        when(userRepository.validateUser(OWNER_ID)).thenReturn(owner);
+        when(bookingRepository.getBooking(BOOKING_ID)).thenReturn(booking);
+        when(userRepository.getUser(OWNER_ID)).thenReturn(owner);
 
         when(booking.getItem()).thenReturn(bookedItem);
         when(booking.getStatus()).thenReturn(BookingStatus.APPROVED);

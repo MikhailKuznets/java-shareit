@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exceptions.InvalidIdException;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -38,7 +39,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemReqResponseDto createRequest(ItemReqRequestDto itemReqRequestDto, Long requesterId) {
-        User requester = userRepository.validateUser(requesterId);
+        User requester = getUser(requesterId);
         ItemRequest itemRequest = itemRequestMapper.toItemRequest(itemReqRequestDto);
 
         LocalDateTime now = LocalDateTime.now();
@@ -52,15 +53,17 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemReqResponseDto getRequestById(Long requestId, Long userId) {
-        userRepository.validateUser(userId);
-        ItemRequest request = itemRequestRepository.validateItemRequest(requestId);
+        getUser(userId);
+        ItemRequest request = itemRequestRepository.findById(requestId).orElseThrow(() -> {
+            throw new InvalidIdException("Запрос с id = " + requestId + " на добавление предмета не существует");
+        });
         ItemReqResponseDto requestDto = itemRequestMapper.toItemRequestDto(request);
         return setItems(requestDto);
     }
 
     @Override
     public Collection<ItemReqResponseDto> getUserAllRequests(Long requesterId) {
-        userRepository.validateUser(requesterId);
+        getUser(requesterId);
         Collection<ItemRequest> requests = itemRequestRepository.findByRequesterId(requesterId, CREATED_DESC_SORT);
         return requests.stream()
                 .map(itemRequestMapper::toItemRequestDto)
@@ -70,7 +73,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public Collection<ItemReqResponseDto> getAllRequestByOtherUsers(Long userId, Integer from, Integer size) {
-        userRepository.validateUser(userId);
+        getUser(userId);
 
         PageRequest pageRequest = PageRequest.of(from, size, CREATED_DESC_SORT);
         Page<ItemRequest> page = itemRequestRepository.findByRequesterIdIsNot(userId, pageRequest);
@@ -90,4 +93,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return itemReqResponseDto;
     }
 
+    private User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> {
+            throw new InvalidIdException("Пользователя с id = " + userId + " не существует");
+        });
+    }
 }
