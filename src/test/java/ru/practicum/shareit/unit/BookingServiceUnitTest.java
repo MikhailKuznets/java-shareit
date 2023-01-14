@@ -25,6 +25,8 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -95,8 +97,8 @@ class BookingServiceUnitTest {
     void shouldNotCreateBookingUnavailableItem() {
         bookedItem.setAvailable(false);
 
-        when(userRepository.getUser(BOOKER_ID)).thenReturn(booker);
-        when(itemRepository.getItem(anyLong())).thenReturn(bookedItem);
+        when(userRepository.findById(BOOKER_ID)).thenReturn(Optional.ofNullable(booker));
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.ofNullable(bookedItem));
 
         assertThrows(BookingUnavailableException.class,
                 () -> bookingService.createBooking(requestBooking, BOOKER_ID));
@@ -105,8 +107,8 @@ class BookingServiceUnitTest {
     @Test
     @DisplayName("Не должен создать Booking собственного предмета собственником")
     void shouldNotCreateBookingOwnerItem() {
-        when(userRepository.getUser(OWNER_ID)).thenReturn(owner);
-        when(itemRepository.getItem(anyLong())).thenReturn(bookedItem);
+        when(userRepository.findById(OWNER_ID)).thenReturn(Optional.ofNullable(owner));
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.ofNullable(bookedItem));
 
         assertThrows(InvalidIdException.class,
                 () -> bookingService.createBooking(requestBooking, OWNER_ID));
@@ -115,8 +117,8 @@ class BookingServiceUnitTest {
     @Test
     @DisplayName("Не должен подтвердить Booking не собственником")
     void shouldNotApproveBookingByOtherUser() {
-        when(bookingRepository.getBooking(BOOKING_ID)).thenReturn(booking);
-        when(userRepository.getUser(OTHER_USER_ID)).thenReturn(otherUser);
+        when(bookingRepository.findById(BOOKING_ID)).thenReturn(Optional.of(booking));
+        when(userRepository.findById(OTHER_USER_ID)).thenReturn(Optional.ofNullable(otherUser));
 
         when(booking.getItem()).thenReturn(bookedItem);
 
@@ -127,8 +129,8 @@ class BookingServiceUnitTest {
     @Test
     @DisplayName("Не должен подтвердить уже подтверпжденный Booking")
     void shouldNotApproveApprovedBooking() {
-        when(bookingRepository.getBooking(BOOKING_ID)).thenReturn(booking);
-        when(userRepository.getUser(OWNER_ID)).thenReturn(owner);
+        when(bookingRepository.findById(BOOKING_ID)).thenReturn(Optional.of(booking));
+        when(userRepository.findById(OWNER_ID)).thenReturn(Optional.ofNullable(owner));
 
         when(booking.getItem()).thenReturn(bookedItem);
         when(booking.getStatus()).thenReturn(BookingStatus.APPROVED);
