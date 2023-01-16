@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
+// Из примера
 @Controller
 @RequestMapping(path = "/bookings-yandex")
 @RequiredArgsConstructor
