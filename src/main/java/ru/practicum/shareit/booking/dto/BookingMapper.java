@@ -3,24 +3,30 @@ package ru.practicum.shareit.booking.dto;
 import org.mapstruct.Mapper;
 import ru.practicum.shareit.booking.model.Booking;
 
-import java.util.Objects;
-
 @Mapper(componentModel = "spring")
 public interface BookingMapper {
     Booking toBookingFromBookingRequestDto(BookingRequestDto requestDto);
 
     BookingResponseDto toBookingResponseDto(Booking booking);
 
+
+    // По аналогии со сгенерированным классом BookingMapperImpl
     default BookingDtoForItems toBookingDtoForItem(Booking booking) {
-        if (Objects.isNull(booking)) {
+        if (booking == null) {
             return null;
         }
-        BookingDtoForItems bookingDtoForItems = new BookingDtoForItems();
-        bookingDtoForItems.setId(booking.getId());
-        bookingDtoForItems.setStart(booking.getStart());
-        bookingDtoForItems.setEnd(booking.getEnd());
-        bookingDtoForItems.setBookerId(booking.getBooker().getId());
-        bookingDtoForItems.setStatus(booking.getStatus());
+
+        BookingDtoForItems bookingDtoForItems = BookingDtoForItems.builder()
+                .id(booking.getId())
+                .start(booking.getStart())
+                .end(booking.getEnd())
+                .status(booking.getStatus())
+                .build();
+
+        if (booking.getBooker() != null) {
+            bookingDtoForItems.setBookerId(booking.getBooker().getId());
+        }
+
         return bookingDtoForItems;
     }
 }

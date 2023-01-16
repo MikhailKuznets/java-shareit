@@ -27,10 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findUserById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new InvalidIdException("К сожалению, пользователя с id " + userId + " нет");
-        });
-        return userMapper.toUserDto(user);
+        return userMapper.toUserDto(getUser(userId));
     }
 
     @Override
@@ -41,9 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(Long userId, User user) {
-        User selectedUser = userRepository.findById(userId).orElseThrow(() -> {
-            throw new InvalidIdException("К сожалению, пользователя с id " + userId + " нет");
-        });
+        User selectedUser = getUser(userId);
 
         String updatedName = user.getName();
         if (updatedName != null) {
@@ -61,9 +56,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long userId) {
-        userRepository.findById(userId).orElseThrow(() -> {
-            throw new InvalidIdException("К сожалению, пользователя с id " + userId + " нет.");
-        });
         userRepository.deleteById(userId);
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> {
+            throw new InvalidIdException("Пользователя с id = " + userId + " не существует");
+        });
     }
 }

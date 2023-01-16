@@ -13,14 +13,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 //@Validated - Нужна ли тут данная аннотация? На вебинаре сказали что да
 public class ErrorHandler {
 
-    @ExceptionHandler(EmailAlreadyExistException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT)
-    public ErrorResponse handleEmailAlreadyExistException(final EmailAlreadyExistException e) {
-        log.error("КОД 409: {}", e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-
     @ExceptionHandler(InvalidIdException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorResponse handleInvalidIdException(final InvalidIdException e) {

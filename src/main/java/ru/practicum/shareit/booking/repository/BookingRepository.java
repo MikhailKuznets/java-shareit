@@ -1,62 +1,57 @@
 package ru.practicum.shareit.booking.repository;
 
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.exceptions.InvalidIdException;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Optional;
 
+@Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    default Booking validateBooking(Long bookingId) {
-        return findById(bookingId).orElseThrow(() -> {
-            throw new InvalidIdException("Бронирование с id = " + bookingId + " не существует");
-        });
-    }
+    Page<Booking> findAllByBooker_Id(Long bookerId, Pageable pageable);
 
-    Collection<Booking> findAllByBooker_Id(Long bookerId, Sort sort);
+    Page<Booking> findByBooker_IdAndStartIsBeforeAndEndIsAfter(Long bookerId,
+                                                               LocalDateTime start,
+                                                               LocalDateTime end,
+                                                               Pageable pageable);
 
-    Collection<Booking> findByBooker_IdAndStartIsBeforeAndEndIsAfter(Long bookerId,
-                                                                     LocalDateTime start,
-                                                                     LocalDateTime end,
-                                                                     Sort sort);
+    Page<Booking> findByBooker_IdAndStartIsAfterAndEndIsAfter(Long bookerId,
+                                                              LocalDateTime start,
+                                                              LocalDateTime end,
+                                                              Pageable pageable);
 
-    Collection<Booking> findByBooker_IdAndStartIsAfterAndEndIsAfter(Long bookerId,
+    Page<Booking> findByBooker_IdAndStartIsBeforeAndEndIsBefore(Long bookerId,
+                                                                LocalDateTime start,
+                                                                LocalDateTime end,
+                                                                Pageable pageable);
+
+    Page<Booking> findByBooker_IdAndStatusIs(Long bookerId, BookingStatus status, Pageable pageable);
+
+    Page<Booking> findByItem_Owner_Id(Long ownerId, Pageable pageable);
+
+    Page<Booking> findByItem_Owner_IdAndStartIsBeforeAndEndIsAfter(Long ownerId,
+                                                                   LocalDateTime start,
+                                                                   LocalDateTime end,
+                                                                   Pageable pageable);
+
+    Page<Booking> findByItem_Owner_IdAndStartIsAfterAndEndIsAfter(Long ownerId,
+                                                                  LocalDateTime start,
+                                                                  LocalDateTime end,
+                                                                  Pageable pageable);
+
+    Page<Booking> findByItem_Owner_IdAndStartIsBeforeAndEndIsBefore(Long ownerId,
                                                                     LocalDateTime start,
                                                                     LocalDateTime end,
-                                                                    Sort sort);
+                                                                    Pageable pageable);
 
-    Collection<Booking> findByBooker_IdAndStartIsBeforeAndEndIsBefore(Long bookerId,
-                                                                      LocalDateTime start,
-                                                                      LocalDateTime end,
-                                                                      Sort sort);
-
-    Collection<Booking> findByBooker_IdAndStatusIs(Long bookerId, BookingStatus status, Sort sort);
-
-    Collection<Booking> findByItem_Owner_Id(Long ownerId, Sort sort);
-
-    Collection<Booking> findByItem_Owner_IdAndStartIsBeforeAndEndIsAfter(Long ownerId,
-                                                                         LocalDateTime start,
-                                                                         LocalDateTime end,
-                                                                         Sort sort);
-
-    Collection<Booking> findByItem_Owner_IdAndStartIsAfterAndEndIsAfter(Long ownerId,
-                                                                        LocalDateTime start,
-                                                                        LocalDateTime end,
-                                                                        Sort sort);
-
-    Collection<Booking> findByItem_Owner_IdAndStartIsBeforeAndEndIsBefore(Long ownerId,
-                                                                          LocalDateTime start,
-                                                                          LocalDateTime end,
-                                                                          Sort sort);
-
-    Collection<Booking> findByItem_Owner_IdAndStatusIs(Long ownerId,
-                                                       BookingStatus status,
-                                                       Sort sort);
+    Page<Booking> findByItem_Owner_IdAndStatusIs(Long ownerId,
+                                                 BookingStatus status,
+                                                 Pageable pageable);
 
     Optional<Booking> findFirstByItem_IdAndEndIsBeforeOrderByEndDesc(Long itemId, LocalDateTime now);
 

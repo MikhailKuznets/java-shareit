@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -17,6 +18,7 @@ import java.util.Collection;
 @RequestMapping(path = "/users")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class UserController {
     private final UserService userService;
 
@@ -47,7 +49,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUserById(@PathVariable @Positive Long userId) {
-        log.info("Получен запрос Delete /users/{} . Удалить пользователя по userId {}.", userId, userId);
+        log.info("Получен запрос Delete /users/{} . Удалить пользователя имеющего userId {}.", userId, userId);
         userService.deleteUserById(userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

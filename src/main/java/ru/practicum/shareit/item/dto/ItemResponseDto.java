@@ -1,20 +1,18 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.Data;
+import lombok.*;
 import ru.practicum.shareit.booking.dto.BookingDtoForItems;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
 
-import javax.validation.constraints.Size;
 import java.util.Collection;
 
 @Data
+@Builder
 public class ItemResponseDto {
     private Long id;
 
-    @Size(max = 255)
     private String name;
 
-    @Size(max = 255)
     private String description;
 
     private Boolean available;
@@ -22,5 +20,8 @@ public class ItemResponseDto {
     private BookingDtoForItems lastBooking;
 
     private BookingDtoForItems nextBooking;
+
     private Collection<CommentResponseDto> comments;
+
+    private Long requestId;
 }
