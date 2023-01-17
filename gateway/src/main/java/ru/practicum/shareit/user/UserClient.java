@@ -29,11 +29,7 @@ public class UserClient extends BaseClient {
         return post("", requestDto);
     }
 
-    public ResponseEntity<Object> findAllUsers() {
-        return get("");
-    }
-
-    public ResponseEntity<Object> findUserById(Long userId) {
+    public ResponseEntity<Object> getUserById(Long userId) {
         return get("/" + userId, userId);
     }
 
@@ -45,4 +41,7 @@ public class UserClient extends BaseClient {
         return delete("/" + userId, userId);
     }
 
+    public ResponseEntity<Object> findAllUsers() {
+        return get("");
+    }
 }

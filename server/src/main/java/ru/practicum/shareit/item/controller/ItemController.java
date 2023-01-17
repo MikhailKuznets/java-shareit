@@ -59,7 +59,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ItemResponseDto> createItem(@RequestHeader("X-Sharer-User-Id") @Positive Long ownerId,
-                                                      @RequestBody @Valid ItemRequestDto itemDto) {
+                                                      @RequestBody ItemRequestDto itemDto) {
         log.info("Получен запрос Post /items . От пользователя id = {}, добавить вещь: {}", ownerId, itemDto);
         return new ResponseEntity<>(itemService.createItem(itemDto, ownerId), HttpStatus.OK);
     }

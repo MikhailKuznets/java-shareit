@@ -27,9 +27,9 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Object> findUserById(@PathVariable @Positive Long userId) {
+    public ResponseEntity<Object> getUserById(@PathVariable @Positive Long userId) {
         log.info("Получен запрос Get /users/{} . Найти пользователя по userId {}.", userId, userId);
-        return userClient.findUserById(userId);
+        return userClient.getUserById(userId);
     }
 
     @PatchMapping("/{userId}")

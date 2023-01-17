@@ -10,7 +10,6 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.Collection;
 
@@ -29,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> findUserById(@PathVariable Long userId) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
         log.info("Получен запрос Get /users/{} . Найти пользователя по userId {}.", userId, userId);
         return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
