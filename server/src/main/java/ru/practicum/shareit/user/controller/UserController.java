@@ -29,13 +29,13 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> findUserById(@PathVariable @Positive Long userId) {
+    public ResponseEntity<UserDto> findUserById(@PathVariable Long userId) {
         log.info("Получен запрос Get /users/{} . Найти пользователя по userId {}.", userId, userId);
         return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody @Valid User user) {
+    public ResponseEntity<UserDto> createUser(@RequestBody User user) {
         log.info("Получен запрос Post /users . Создать пользователя: {}.", user);
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable @Positive Long userId) {
+    public ResponseEntity<Void> deleteUserById(@PathVariable Long userId) {
         log.info("Получен запрос Delete /users/{} . Удалить пользователя имеющего userId {}.", userId, userId);
         userService.deleteUserById(userId);
         return new ResponseEntity<>(HttpStatus.OK);
