@@ -4,25 +4,19 @@ version: '3.8'
 # имена и описания контейнеров, которые должны быть развёрнуты
 services:
   gateway:
-    build: ./gateway
-    image: amazoncorretto:11-alpine-jdk
+    build: gateway
+    image: shareit-gateway
     container_name: shareit-gateway
     ports:
       - "8080:8080"
     depends_on:
-      - db
       - server
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
-      - DB_NAME=shareit
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - DB_HOST=db
-      - DB_PORT=5432
 
   server:
-    build: ./server
-    image: amazoncorretto:11-alpine-jdk
+    build: server
+    image: shareit-server
     container_name: shareit-server
     ports:
       - "9090:9090"
@@ -30,29 +24,20 @@ services:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
-      - DB_NAME=shareit
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - DB_HOST=db
-      - DB_PORT=5432
-
 
   db:
     # образ, из которого должен быть запущен контейнер
     image: postgres:13.7-alpine
-
     # volume и связанная с ним директория в контейнере
     #    volumes:
     #      - /var/lib/postgresql/data/
-
-    #    container_name:
+    container_name: shareit-db
     ports:
       - "6541:5432"
-
     # переменные окружения
     environment:
-      - DB_NAME=shareit
+      - POSTGRES_DB=shareit
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - DB_HOST=db
-      - DB_PORT=5432
