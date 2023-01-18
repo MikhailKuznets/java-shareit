@@ -56,4 +56,3 @@ services:
       - POSTGRES_PASSWORD=root
       - DB_HOST=db
       - DB_PORT=5432
-
