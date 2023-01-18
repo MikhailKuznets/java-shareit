@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 
 import javax.validation.Valid;
@@ -57,16 +58,26 @@ public class ItemController {
         return itemClient.getUserItems(ownerId, from, size);
     }
 
-//    @GetMapping("/search")
-//    public ResponseEntity<Object> searchItem(
-//            @RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-//            @RequestParam String text,
-//            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
-//            @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
-//        log.info("Получен запрос GET /items/search?text={} . От пользователя id = {} на поиск предмета: {} ." +
-//                        "Отображать по {} предметов на странице, начиная с itemId = {}.",
-//                text, userId, text, size, from);
-//        return itemClient.searchItem(text, from, size);
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<Object> searchItem(
+            @RequestHeader("X-Sharer-User-Id") @Positive Long userId,
+            @RequestParam String text,
+            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
+        log.info("Получен запрос GET /items/search?text={} . От пользователя id = {} на поиск предмета: {} ." +
+                        "Отображать по {} предметов на странице, начиная с itemId = {}.",
+                text, userId, text, size, from);
+        return itemClient.searchItem(text, userId, from, size);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public ResponseEntity<Object> createComment(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                @Valid @RequestBody CommentRequestDto commentRequestDto,
+                                                @PathVariable @Positive Long itemId) {
+        log.info("Получен запрос Post /items/{}/comment . От пользователя id = {}, добавить к вещи с id = {}. " +
+                        "Комментарий: {}",
+                itemId, userId, itemId, commentRequestDto);
+        return itemClient.createComment(commentRequestDto, itemId, userId);
+    }
 
 }
