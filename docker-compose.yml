@@ -1,7 +1,5 @@
-# версия Docker Compose
 version: '3.8'
 
-# имена и описания контейнеров, которые должны быть развёрнуты
 services:
   gateway:
     build: gateway
@@ -28,15 +26,10 @@ services:
       - POSTGRES_PASSWORD=root
 
   db:
-    # образ, из которого должен быть запущен контейнер
     image: postgres:13.7-alpine
-    # volume и связанная с ним директория в контейнере
-    #    volumes:
-    #      - /var/lib/postgresql/data/
     container_name: shareit-db
     ports:
       - "6541:5432"
-    # переменные окружения
     environment:
       - POSTGRES_DB=shareit
       - POSTGRES_USER=root
